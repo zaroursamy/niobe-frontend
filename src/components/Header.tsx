@@ -118,7 +118,7 @@ export default function Header() {
             className="flex items-center gap-3 p-3 rounded-lg hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))] transition-colors mb-2"
             activeProps={{
               className:
-                "flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2",
+                "flex items-center gap-3 p-3 rounded-lg bg-primary text-primary-foreground transition-colors mb-2",
             }}
           >
             <Home size={20} />
@@ -132,7 +132,7 @@ export default function Header() {
               className="flex items-center gap-3 p-3 rounded-lg hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))] transition-colors mb-2"
               activeProps={{
                 className:
-                  "flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2",
+                  "flex items-center gap-3 p-3 rounded-lg bg-primary text-primary-foreground transition-colors mb-2",
               }}
             >
               <Home size={20} />
@@ -148,7 +148,7 @@ export default function Header() {
             className="flex items-center gap-3 p-3 rounded-lg hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))] transition-colors mb-2"
             activeProps={{
               className:
-                "flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2",
+                "flex items-center gap-3 p-3 rounded-lg bg-primary text-primary-foreground transition-colors mb-2",
             }}
           >
             <ClipboardType size={20} />
@@ -161,7 +161,7 @@ export default function Header() {
             className="flex items-center gap-3 p-3 rounded-lg hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))] transition-colors mb-2"
             activeProps={{
               className:
-                "flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2",
+                "flex items-center gap-3 p-3 rounded-lg bg-primary text-primary-foreground transition-colors mb-2",
             }}
           >
             <ClipboardType size={20} />
@@ -174,7 +174,7 @@ export default function Header() {
             className="flex items-center gap-3 p-3 rounded-lg hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))] transition-colors mb-2"
             activeProps={{
               className:
-                "flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2",
+                "flex items-center gap-3 p-3 rounded-lg bg-primary text-primary-foreground transition-colors mb-2",
             }}
           >
             <Network size={20} />
@@ -187,7 +187,7 @@ export default function Header() {
             className="flex items-center gap-3 p-3 rounded-lg hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))] transition-colors mb-2"
             activeProps={{
               className:
-                "flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2",
+                "flex items-center gap-3 p-3 rounded-lg bg-primary text-primary-foreground transition-colors mb-2",
             }}
           >
             <SquareFunction size={20} />
@@ -200,7 +200,7 @@ export default function Header() {
             className="flex items-center gap-3 p-3 rounded-lg hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))] transition-colors mb-2"
             activeProps={{
               className:
-                "flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2",
+                "flex items-center gap-3 p-3 rounded-lg bg-primary text-primary-foreground transition-colors mb-2",
             }}
           >
             <Network size={20} />

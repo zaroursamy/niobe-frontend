@@ -27,17 +27,17 @@ function DashboardPage() {
 
   return (
     <main
-      className="min-h-screen text-[color:var(--foreground)] flex items-center justify-center px-6 py-16"
+      className="min-h-screen text-foreground flex items-center justify-center px-6 py-16"
       style={{
         background:
           'radial-gradient(circle at 15% 25%, color-mix(in oklch, var(--primary) 20%, var(--background)), color-mix(in oklch, var(--accent) 12%, var(--background)) 40%, var(--background))',
       }}
     >
-      <section className="w-full max-w-3xl bg-[color:var(--card)] border border-[color:var(--border)] rounded-2xl shadow-xl p-10 text-center space-y-4">
+      <section className="w-full max-w-3xl bg-card border border-border rounded-2xl shadow-xl p-10 text-center space-y-4">
         <h1 className="text-4xl font-bold">Welcome, {email}!</h1>
-        <p className="text-[color:var(--muted-foreground)] text-lg">
+        <p className="text-muted-foreground text-lg">
           You are signed in. Your session is validated via{' '}
-          <code className="px-2 py-1 rounded bg-[color:var(--input)] text-[color:var(--primary)]">
+          <code className="px-2 py-1 rounded bg-input text-primary">
             /auth/me
           </code>{' '}
           using your HttpOnly auth cookie.
@@ -50,20 +50,20 @@ function DashboardPage() {
 function DashboardError({ error }: { error: Error }) {
   return (
     <main
-      className="min-h-screen text-[color:var(--foreground)] flex items-center justify-center px-6 py-16"
+      className="min-h-screen text-foreground flex items-center justify-center px-6 py-16"
       style={{
         background:
           'radial-gradient(circle at 15% 25%, color-mix(in oklch, var(--primary) 20%, var(--background)), color-mix(in oklch, var(--accent) 12%, var(--background)) 40%, var(--background))',
       }}
     >
-      <section className="w-full max-w-3xl bg-[color:var(--card)] border border-[color:var(--border)] rounded-2xl shadow-xl p-10 text-center space-y-4">
+      <section className="w-full max-w-3xl bg-card border border-border rounded-2xl shadow-xl p-10 text-center space-y-4">
         <h1 className="text-3xl font-semibold">Access denied</h1>
-        <p className="text-[color:var(--muted-foreground)]">
+        <p className="text-muted-foreground">
           {error.message || 'Please sign in to continue.'}
         </p>
         <Link
           to="/signin"
-          className="inline-flex items-center justify-center px-4 py-2 rounded-lg font-semibold transition-all text-[color:var(--primary-foreground)] bg-[color:var(--primary)] hover:brightness-95"
+          className="inline-flex items-center justify-center px-4 py-2 rounded-lg font-semibold transition-all text-primary-foreground bg-primary hover:brightness-95"
         >
           Go to sign in
         </Link>

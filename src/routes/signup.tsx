@@ -81,19 +81,19 @@ function SignUpPage() {
           </div>
           <ul className="space-y-3 text-muted-foreground">
             <li className="flex items-center gap-3">
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[color-mix(in_oklch,var(--primary)_18%,var(--background))] text-[color:var(--primary)] font-semibold">
+              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[color-mix(in_oklch,var(--primary)_18%,var(--background))] text-primary font-semibold">
                 1
               </span>
               Add your email and a secure password (8+ characters).
             </li>
             <li className="flex items-center gap-3">
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[color-mix(in_oklch,var(--primary)_18%,var(--background))] text-[color:var(--primary)] font-semibold">
+              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[color-mix(in_oklch,var(--primary)_18%,var(--background))] text-primary font-semibold">
                 2
               </span>
               We post the details to your backend register endpoint.
             </li>
             <li className="flex items-center gap-3">
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[color-mix(in_oklch,var(--primary)_18%,var(--background))] text-[color:var(--primary)] font-semibold">
+              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[color-mix(in_oklch,var(--primary)_18%,var(--background))] text-primary font-semibold">
                 3
               </span>
               See immediate feedback when the account is created.
@@ -101,13 +101,13 @@ function SignUpPage() {
           </ul>
         </section>
 
-        <section className="bg-[color:var(--card)] border border-[color:var(--border)] rounded-2xl shadow-xl p-8 backdrop-blur">
+        <section className="bg-card border border-border rounded-2xl shadow-xl p-8 backdrop-blur">
           <div className="flex items-center gap-3 mb-6">
-            <div className="bg-[color-mix(in_oklch,var(--primary)_15%,var(--card))] text-[color:var(--primary)] p-3 rounded-xl">
+            <div className="bg-[color-mix(in_oklch,var(--primary)_15%,var(--card))] text-primary p-3 rounded-xl">
               <Lock className="w-6 h-6" />
             </div>
             <div>
-              <p className="text-sm text-[color:var(--muted-foreground)]">
+              <p className="text-sm text-muted-foreground">
                 Create account
               </p>
               <h2 className="text-2xl font-semibold">
@@ -120,7 +120,7 @@ function SignUpPage() {
             <label className="block space-y-2">
               <span className="text-sm font-medium">Email</span>
               <div className="relative">
-                <Mail className="w-5 h-5 text-[color:var(--muted-foreground)] absolute left-3 top-1/2 -translate-y-1/2" />
+                <Mail className="w-5 h-5 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="email"
                   name="email"
@@ -129,7 +129,7 @@ function SignUpPage() {
                   required
                   autoComplete="email"
                   placeholder="you@company.com"
-                  className="w-full bg-[color:var(--input)] border border-[color:var(--border)] rounded-lg py-3 pl-11 pr-4 text-[color:var(--foreground)] placeholder:text-[color:var(--muted-foreground)] focus:outline-none focus:border-[color:var(--ring)] focus:ring-2 focus:ring-[color:var(--ring)] transition"
+                  className="w-full bg-input border border-border rounded-lg py-3 pl-11 pr-4 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-ring focus:ring-2 focus:ring-ring transition"
                 />
               </div>
             </label>
@@ -137,7 +137,7 @@ function SignUpPage() {
             <label className="block space-y-2">
               <span className="text-sm font-medium">Password</span>
               <div className="relative">
-                <Lock className="w-5 h-5 text-[color:var(--muted-foreground)] absolute left-3 top-1/2 -translate-y-1/2" />
+                <Lock className="w-5 h-5 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="password"
                   name="password"
@@ -147,7 +147,7 @@ function SignUpPage() {
                   minLength={8}
                   autoComplete="new-password"
                   placeholder="At least 8 characters"
-                  className="w-full bg-[color:var(--input)] border border-[color:var(--border)] rounded-lg py-3 pl-11 pr-4 text-[color:var(--foreground)] placeholder:text-[color:var(--muted-foreground)] focus:outline-none focus:border-[color:var(--ring)] focus:ring-2 focus:ring-[color:var(--ring)] transition"
+                  className="w-full bg-input border border-border rounded-lg py-3 pl-11 pr-4 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-ring focus:ring-2 focus:ring-ring transition"
                 />
               </div>
             </label>
@@ -178,18 +178,18 @@ function SignUpPage() {
             <button
               type="submit"
               disabled={status === "loading"}
-              className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] disabled:opacity-60 disabled:cursor-not-allowed font-semibold py-3 transition-all hover:brightness-95"
+              className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-primary text-primary-foreground disabled:opacity-60 disabled:cursor-not-allowed font-semibold py-3 transition-all hover:brightness-95"
             >
               {status === "loading" ? "Creating account..." : "Sign up"}
             </button>
 
-            <p className="text-xs text-[color:var(--muted-foreground)]">
+            <p className="text-xs text-muted-foreground">
               This form sends a POST request to{" "}
-              <code className="px-2 py-1 rounded bg-[color:var(--card)] text-[color:var(--primary)]">
+              <code className="px-2 py-1 rounded bg-card text-primary">
                 /auth/register
               </code>{" "}
               on{" "}
-              <code className="px-2 py-1 rounded bg-[color:var(--card)] text-[color:var(--primary)]">
+              <code className="px-2 py-1 rounded bg-card text-primary">
                 http://localhost:8000
               </code>
               .
