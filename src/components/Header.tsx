@@ -1,4 +1,4 @@
-import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 
 import { useEffect, useState } from "react";
 import {
@@ -12,8 +12,11 @@ import {
   StickyNote,
   X,
 } from "lucide-react";
+
+import SignInButton from "./buttons/SignInButton";
+import SignOutButton from "./buttons/SignOutButton";
+
 export default function Header() {
-  const navigate = useNavigate();
   const routerState = useRouterState();
   const [isOpen, setIsOpen] = useState(false);
   const [groupedExpanded, setGroupedExpanded] = useState<
@@ -47,39 +50,25 @@ export default function Header() {
     };
   }, [routerState.location.pathname]);
 
-  const handleLogout = async () => {
-    try {
-      await fetch("http://localhost:8000/auth/logout", {
-        method: "POST",
-        credentials: "include",
-      });
-    } catch (error) {
-      console.error("Logout failed", error);
-    } finally {
-      setIsAuthenticated(false);
-      setCheckingAuth(false);
-      void navigate({ to: "/" });
-    }
+  const handleSignedOut = () => {
+    setIsAuthenticated(false);
+    setCheckingAuth(false);
   };
 
   return (
     <>
-      <header
-        className="p-4 flex items-center justify-between shadow-lg text-[color:var(--foreground)]"
-        style={{
-          background:
-            'linear-gradient(135deg, color-mix(in oklch, var(--primary) 12%, var(--background)), color-mix(in oklch, var(--accent) 10%, var(--background)))',
-        }}
-      >
+      <header className="p-4 flex items-center justify-between shadow-lg text-foreground">
         <div className="flex items-center">
-          <button
-            onClick={() => setIsOpen(true)}
-            className="p-2 rounded-lg transition-colors hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))]"
-            aria-label="Open menu"
-          >
-            <Menu size={24} />
-          </button>
-          <h1 className="ml-4 text-xl font-semibold font-[var(--font-sans)] text-[color:var(--foreground)]">
+          {isAuthenticated && (
+            <button
+              onClick={() => setIsOpen(true)}
+              className="p-2 rounded-lg transition-colors hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))]"
+              aria-label="Open menu"
+            >
+              <Menu size={24} />
+            </button>
+          )}
+          <h1 className="ml-4 text-xl font-semibold text-foreground">
             <Link to="/">
               <img
                 src="/tanstack-word-logo-white.svg"
@@ -91,23 +80,13 @@ export default function Header() {
         </div>
         <div className="ml-6 flex items-center gap-3">
           {isAuthenticated ? (
-            <button
-              onClick={handleLogout}
-              className="px-4 py-2 rounded-lg font-semibold transition-all text-[color:var(--destructive-foreground)] bg-[color:var(--destructive)] hover:brightness-95"
-            >
-              Log out
-            </button>
+            <SignOutButton onSignedOut={handleSignedOut} />
           ) : (
             <>
-              <Link
-                to="/signin"
-                className="px-4 py-2 rounded-lg font-semibold transition-all text-[color:var(--primary-foreground)] bg-[color:var(--primary)] hover:brightness-95"
-              >
-                Sign in
-              </Link>
+              <SignInButton />
               <Link
                 to="/signup"
-                className="px-4 py-2 rounded-lg font-semibold transition-all text-[color:var(--accent-foreground)] bg-[color:var(--accent)] hover:brightness-95"
+                className="px-4 py-2 rounded-lg font-semibold transition-all text-accent-foreground bg-accent hover:brightness-95"
               >
                 Sign up
               </Link>
@@ -117,11 +96,11 @@ export default function Header() {
       </header>
 
       <aside
-        className={`fixed top-0 left-0 h-full w-80 bg-[color:var(--background)] text-[color:var(--foreground)] shadow-2xl z-50 transform transition-transform duration-300 ease-in-out flex flex-col ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
+        className={`fixed top-0 left-0 h-full w-80 bg-background text-foreground shadow-2xl z-50 transform transition-transform duration-300 ease-in-out flex flex-col ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex items-center justify-between p-4 border-b border-[color:var(--border)]">
+        <div className="flex items-center justify-between p-4 border-b border-border">
           <h2 className="text-xl font-bold">Navigation</h2>
           <button
             onClick={() => setIsOpen(false)}
@@ -139,7 +118,7 @@ export default function Header() {
             className="flex items-center gap-3 p-3 rounded-lg hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))] transition-colors mb-2"
             activeProps={{
               className:
-                'flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2',
+                "flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2",
             }}
           >
             <Home size={20} />
@@ -153,7 +132,7 @@ export default function Header() {
               className="flex items-center gap-3 p-3 rounded-lg hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))] transition-colors mb-2"
               activeProps={{
                 className:
-                  'flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2',
+                  "flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2",
               }}
             >
               <Home size={20} />
@@ -162,14 +141,14 @@ export default function Header() {
           )}
 
           {/* Demo Links Start */}
-
+          {/*
           <Link
             to="/demo/form/simple"
             onClick={() => setIsOpen(false)}
             className="flex items-center gap-3 p-3 rounded-lg hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))] transition-colors mb-2"
             activeProps={{
               className:
-                'flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2',
+                "flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2",
             }}
           >
             <ClipboardType size={20} />
@@ -182,7 +161,7 @@ export default function Header() {
             className="flex items-center gap-3 p-3 rounded-lg hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))] transition-colors mb-2"
             activeProps={{
               className:
-                'flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2',
+                "flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2",
             }}
           >
             <ClipboardType size={20} />
@@ -195,7 +174,7 @@ export default function Header() {
             className="flex items-center gap-3 p-3 rounded-lg hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))] transition-colors mb-2"
             activeProps={{
               className:
-                'flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2',
+                "flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2",
             }}
           >
             <Network size={20} />
@@ -208,7 +187,7 @@ export default function Header() {
             className="flex items-center gap-3 p-3 rounded-lg hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))] transition-colors mb-2"
             activeProps={{
               className:
-                'flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2',
+                "flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2",
             }}
           >
             <SquareFunction size={20} />
@@ -221,7 +200,7 @@ export default function Header() {
             className="flex items-center gap-3 p-3 rounded-lg hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))] transition-colors mb-2"
             activeProps={{
               className:
-                'flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2',
+                "flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2",
             }}
           >
             <Network size={20} />
@@ -298,7 +277,7 @@ export default function Header() {
                 <span className="font-medium">Data Only</span>
               </Link>
             </div>
-          )}
+          )}*/}
 
           {/* Demo Links End */}
         </nav>
