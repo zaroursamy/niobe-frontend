@@ -69,12 +69,8 @@ export default function Header() {
             </button>
           )}
           <h1 className="ml-4 text-xl font-semibold text-foreground">
-            <Link to="/">
-              <img
-                src="/tanstack-word-logo-white.svg"
-                alt="TanStack Logo"
-                className="h-10"
-              />
+            <Link to="/" className="inline-flex items-center text-3xl font-black tracking-tight text-foreground">
+              Niobé
             </Link>
           </h1>
         </div>
