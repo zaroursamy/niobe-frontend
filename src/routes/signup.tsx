@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import { createFileRoute } from "@tanstack/react-router";
-import { Lock, Mail, Sparkles } from "lucide-react";
+import { Link, createFileRoute } from "@tanstack/react-router";
+import { Lock, Mail } from "lucide-react";
 
 export const Route = createFileRoute("/signup")({
   component: SignUpPage,
@@ -54,60 +54,8 @@ function SignUpPage() {
 
   return (
     <main className="min-h-screen text-foreground flex items-center justify-center px-6 py-16">
-      <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-        <section className="space-y-6">
-          <div className="inline-flex items-center gap-3 rounded-full bg-[color-mix(in_oklch,var(--primary)_15%,var(--background))] text-primary px-4 py-2 border border-border">
-            <Sparkles className="w-5 h-5" />
-            <span className="text-sm font-medium">Niobé HR Access</span>
-          </div>
-          <div>
-            <h1 className="text-4xl font-bold leading-tight">
-              Create your account
-            </h1>
-            <p className="mt-3 text-muted-foreground text-lg max-w-xl">
-              Sign up with your work email to get started. The form registers
-              new users through the endpoint at{" "}
-              <code className="px-2 py-1 rounded bg-card text-primary">
-                http://localhost:8000/auth/register
-              </code>{" "}
-              (returns a simple confirmation message).
-            </p>
-          </div>
-          <ul className="space-y-3 text-muted-foreground">
-            <li className="flex items-center gap-3">
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[color-mix(in_oklch,var(--primary)_18%,var(--background))] text-primary font-semibold">
-                1
-              </span>
-              Add your email and a secure password (8+ characters).
-            </li>
-            <li className="flex items-center gap-3">
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[color-mix(in_oklch,var(--primary)_18%,var(--background))] text-primary font-semibold">
-                2
-              </span>
-              We post the details to your backend register endpoint.
-            </li>
-            <li className="flex items-center gap-3">
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[color-mix(in_oklch,var(--primary)_18%,var(--background))] text-primary font-semibold">
-                3
-              </span>
-              See immediate feedback when the account is created.
-            </li>
-          </ul>
-        </section>
-
+      <div className="w-full max-w-md">
         <section className="bg-card border border-border rounded-2xl shadow-xl p-8 backdrop-blur">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="bg-[color-mix(in_oklch,var(--primary)_15%,var(--card))] text-primary p-3 rounded-xl">
-              <Lock className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Create account</p>
-              <h2 className="text-2xl font-semibold">
-                Register with email & password
-              </h2>
-            </div>
-          </div>
-
           <form className="space-y-6" onSubmit={handleSubmit}>
             <label className="block space-y-2">
               <span className="text-sm font-medium">Email</span>
@@ -175,16 +123,14 @@ function SignUpPage() {
               {status === "loading" ? "Creating account..." : "Sign up"}
             </button>
 
-            <p className="text-xs text-muted-foreground">
-              This form sends a POST request to{" "}
-              <code className="px-2 py-1 rounded bg-card text-primary">
-                /auth/register
-              </code>{" "}
-              on{" "}
-              <code className="px-2 py-1 rounded bg-card text-primary">
-                http://localhost:8000
-              </code>
-              .
+            <p className="text-xs text-muted-foreground text-center">
+              Already have an account?{" "}
+              <Link
+                to="/signin"
+                className="font-semibold text-primary hover:underline"
+              >
+                Sign in
+              </Link>
             </p>
           </form>
         </section>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Lock, Mail, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/signin")({
@@ -130,16 +130,14 @@ function SignInPage() {
               {status === "loading" ? "Sending..." : "Sign in"}
             </button>
 
-            <p className="text-xs text-muted-foreground">
-              This form sends a POST request to{" "}
-              <code className="px-2 py-1 rounded bg-card text-primary">
-                /auth/login
-              </code>{" "}
-              on{" "}
-              <code className="px-2 py-1 rounded bg-card text-primary">
-                http://localhost:8000
-              </code>
-              .
+            <p className="text-xs text-muted-foreground text-center">
+              You don't have an account ?{" "}
+              <Link
+                to="/signup"
+                className="font-semibold text-primary hover:underline"
+              >
+                Sign up
+              </Link>
             </p>
           </form>
         </section>

@@ -30,11 +30,7 @@ function DashboardPage() {
       <section className="w-full max-w-3xl bg-card border border-border rounded-2xl shadow-xl p-10 text-center space-y-4">
         <h1 className="text-4xl font-bold">Welcome, {email}!</h1>
         <p className="text-muted-foreground text-lg">
-          You are signed in. Your session is validated via{" "}
-          <code className="px-2 py-1 rounded bg-input text-primary">
-            /auth/me
-          </code>{" "}
-          using your HttpOnly auth cookie.
+          What do you want to do ?
         </p>
       </section>
     </main>
