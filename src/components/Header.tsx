@@ -1,17 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 
 import { useEffect, useState } from "react";
-import {
-  ChevronDown,
-  ChevronRight,
-  ClipboardType,
-  Home,
-  Menu,
-  Network,
-  SquareFunction,
-  StickyNote,
-  X,
-} from "lucide-react";
+import { Home, LayoutDashboard, Menu, X } from "lucide-react";
 
 import SignInButton from "./buttons/SignInButton";
 import SignOutButton from "./buttons/SignOutButton";
@@ -69,7 +59,10 @@ export default function Header() {
             </button>
           )}
           <h1 className="ml-4 text-xl font-semibold text-foreground">
-            <Link to="/" className="inline-flex items-center text-3xl font-black tracking-tight text-foreground">
+            <Link
+              to="/"
+              className="inline-flex items-center text-3xl font-black tracking-tight text-foreground"
+            >
               Niobé
             </Link>
           </h1>
@@ -131,7 +124,7 @@ export default function Header() {
                   "flex items-center gap-3 p-3 rounded-lg bg-primary text-primary-foreground transition-colors mb-2",
               }}
             >
-              <Home size={20} />
+              <LayoutDashboard size={20} />
               <span className="font-medium">Dashboard</span>
             </Link>
           )}
