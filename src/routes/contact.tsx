@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { FormEvent } from "react";
 
+import SendButton from "@/components/buttons/SendButton";
+
 export const Route = createFileRoute("/contact")({ component: ContactPage });
 
 function ContactPage() {
@@ -71,12 +73,7 @@ function ContactPage() {
             <p className="text-xs text-muted-foreground">
               The fields marked * are required.
             </p>
-            <button
-              type="submit"
-              className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-primary text-primary-foreground font-semibold shadow-lg shadow-black/30 hover:brightness-110 transition-colors"
-            >
-              Send
-            </button>
+            <SendButton />
           </div>
         </form>
       </div>
