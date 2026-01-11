@@ -1,118 +1,137 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { Link, createFileRoute } from "@tanstack/react-router";
 import {
-  Zap,
-  Server,
-  Route as RouteIcon,
-  Shield,
-  Waves,
+  ArrowRight,
+  CalendarClock,
+  CheckCircle2,
+  ClipboardList,
   Sparkles,
-} from 'lucide-react'
+  Upload,
+} from "lucide-react";
 
-export const Route = createFileRoute('/')({ component: App })
+export const Route = createFileRoute("/")({ component: App });
 
 function App() {
   const features = [
     {
-      icon: <Zap className="w-12 h-12 text-cyan-400" />,
-      title: 'Powerful Server Functions',
+      icon: <Upload className="w-12 h-12 text-[var(--color-primary)]" />,
+      title: "Import your pipeline",
       description:
-        'Write server-side code that seamlessly integrates with your client components. Type-safe, secure, and simple.',
+        "Upload CV folders or ATS exports in one move; everything is organized by role.",
     },
     {
-      icon: <Server className="w-12 h-12 text-cyan-400" />,
-      title: 'Flexible Server Side Rendering',
+      icon: <ClipboardList className="w-12 h-12 text-[var(--color-chart-3)]" />,
+      title: "Extract deep insights",
       description:
-        'Full-document SSR, streaming, and progressive enhancement out of the box. Control exactly what renders where.',
+        "Summaries, highlights, and risks pulled from every CV automatically—at scale.",
     },
     {
-      icon: <RouteIcon className="w-12 h-12 text-cyan-400" />,
-      title: 'API Routes',
+      icon: <Sparkles className="w-12 h-12 text-[var(--color-accent)]" />,
+      title: "IA scoring",
       description:
-        'Build type-safe API endpoints alongside your application. No separate backend needed.',
+        "Every profile is scored automatically against your must-haves.",
     },
     {
-      icon: <Shield className="w-12 h-12 text-cyan-400" />,
-      title: 'Strongly Typed Everything',
+      icon: <ArrowRight className="w-12 h-12 text-[var(--color-ring)]" />,
+      title: "Surface top matches",
       description:
-        'End-to-end type safety from server to client. Catch errors before they reach production.',
+        "See the strongest candidates per role instantly, even across hundreds of resumes.",
     },
     {
-      icon: <Waves className="w-12 h-12 text-cyan-400" />,
-      title: 'Full Streaming Support',
+      icon: <CheckCircle2 className="w-12 h-12 text-[var(--color-chart-4)]" />,
+      title: "Decide with confidence",
       description:
-        'Stream data from server to client progressively. Perfect for AI applications and real-time updates.',
+        "Share concise shortlists with hiring teams so decisions happen faster.",
     },
-    {
-      icon: <Sparkles className="w-12 h-12 text-cyan-400" />,
-      title: 'Next Generation Ready',
-      description:
-        'Built from the ground up for modern web applications. Deploy anywhere JavaScript runs.',
-    },
-  ]
+  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
-      <section className="relative py-20 px-6 text-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 via-blue-500/10 to-purple-500/10"></div>
-        <div className="relative max-w-5xl mx-auto">
-          <div className="flex items-center justify-center gap-6 mb-6">
-            <img
-              src="/tanstack-circle-logo.png"
-              alt="TanStack Logo"
-              className="w-24 h-24 md:w-32 md:h-32"
-            />
-            <h1 className="text-6xl md:text-7xl font-black text-white [letter-spacing:-0.08em]">
-              <span className="text-gray-300">TANSTACK</span>{' '}
-              <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                START
-              </span>
+    <div className="min-h-screen text-foreground bg-gradient-to-b from-background via-accent/10 to-background">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div
+          className="absolute -right-10 top-10 h-64 w-64 rounded-full blur-3xl"
+          style={{
+            backgroundColor:
+              "color-mix(in oklch, var(--color-primary) 30%, transparent)",
+          }}
+        />
+        <div
+          className="absolute -left-10 top-64 h-64 w-64 rounded-full blur-3xl"
+          style={{
+            backgroundColor:
+              "color-mix(in oklch, var(--color-chart-3) 30%, transparent)",
+          }}
+        />
+        <div
+          className="absolute left-1/2 bottom-0 h-80 w-80 -translate-x-1/2 rounded-full blur-3xl"
+          style={{
+            backgroundColor:
+              "color-mix(in oklch, var(--color-accent) 30%, transparent)",
+          }}
+        />
+      </div>
+
+      <section className="relative px-6 pt-20 pb-12">
+        <div className="max-w-4xl mx-auto flex flex-col items-center gap-10 text-center">
+          <div className="w-full space-y-6">
+            <h1 className="text-5xl md:text-6xl font-black leading-tight [letter-spacing:-0.04em]">
+              The hiring co-pilot built for recruiters.
             </h1>
-          </div>
-          <p className="text-2xl md:text-3xl text-gray-300 mb-4 font-light">
-            The framework for next generation AI applications
-          </p>
-          <p className="text-lg text-gray-400 max-w-3xl mx-auto mb-8">
-            Full-stack framework powered by TanStack Router for React and Solid.
-            Build modern applications with server functions, streaming, and type
-            safety.
-          </p>
-          <div className="flex flex-col items-center gap-4">
-            <a
-              href="https://tanstack.com/start"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-8 py-3 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold rounded-lg transition-colors shadow-lg shadow-cyan-500/50"
-            >
-              Documentation
-            </a>
-            <p className="text-gray-400 text-sm mt-2">
-              Begin your TanStack Start journey by editing{' '}
-              <code className="px-2 py-1 bg-slate-700 rounded text-cyan-400">
-                /src/routes/index.tsx
-              </code>
+            <p className="text-lg text-muted-foreground">
+              Get automatic scoring for selecting the best candidates.
+              <br />
+              Get recommendations during interviews for asking accurate
+              questions.
+              <br />
+              Reduce risks of hiring the wrong profiles.
             </p>
+            <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+              <Link
+                to="/contact"
+                className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-semibold transition-colors flex items-center gap-2 shadow-lg shadow-black/30 hover:brightness-110"
+              >
+                Book a demo
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <a
+                href="#how-it-works"
+                className="text-foreground hover:text-primary underline-offset-4 hover:underline"
+              >
+                See how it works
+              </a>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="py-16 px-6 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 hover:border-cyan-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/10"
-            >
-              <div className="mb-4">{feature.icon}</div>
-              <h3 className="text-xl font-semibold text-white mb-3">
-                {feature.title}
-              </h3>
-              <p className="text-gray-400 leading-relaxed">
-                {feature.description}
-              </p>
+      <section
+        id="how-it-works"
+        className="relative px-6 py-16 border-t border-border bg-gradient-to-b from-background/90 to-background"
+      >
+        <div className="max-w-6xl mx-auto flex flex-col gap-10">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-3xl md:text-4xl font-bold mt-2 text-foreground">
+                Handle hundreds of resumes for the roles that matter.
+              </h2>
             </div>
-          ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {features.map((feature, index) => (
+              <div
+                key={index}
+                className="rounded-2xl border border-border bg-card/15 p-6 backdrop-blur-sm transition-all duration-300 hover:border-primary"
+              >
+                <div className="mb-4">{feature.icon}</div>
+                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  {feature.description}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </div>
-  )
+  );
 }
