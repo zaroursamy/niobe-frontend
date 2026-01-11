@@ -43,13 +43,13 @@ export default function Header() {
         <div className="ml-6 flex items-center gap-3">
           <Link
             to="/signin"
-            className="px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold rounded-lg transition-colors"
+            className="px-4 py-2 rounded-lg font-semibold transition-all text-[color:var(--primary-foreground)] bg-[color:var(--primary)] hover:brightness-95"
           >
             Sign in
           </Link>
           <Link
             to="/signup"
-            className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-lg transition-colors"
+            className="px-4 py-2 rounded-lg font-semibold transition-all text-[color:var(--accent-foreground)] bg-[color:var(--accent)] hover:brightness-95"
           >
             Sign up
           </Link>
