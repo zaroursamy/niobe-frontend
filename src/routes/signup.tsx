@@ -53,13 +53,7 @@ function SignUpPage() {
   };
 
   return (
-    <main
-      className="min-h-screen text-foreground flex items-center justify-center px-6 py-16"
-      style={{
-        background:
-          "radial-gradient(circle at 20% 20%, color-mix(in oklch, var(--accent) 22%, var(--background)), color-mix(in oklch, var(--primary) 14%, var(--background)) 42%, var(--background))",
-      }}
-    >
+    <main className="min-h-screen text-foreground flex items-center justify-center px-6 py-16">
       <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
         <section className="space-y-6">
           <div className="inline-flex items-center gap-3 rounded-full bg-[color-mix(in_oklch,var(--primary)_15%,var(--background))] text-primary px-4 py-2 border border-border">
@@ -107,9 +101,7 @@ function SignUpPage() {
               <Lock className="w-6 h-6" />
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">
-                Create account
-              </p>
+              <p className="text-sm text-muted-foreground">Create account</p>
               <h2 className="text-2xl font-semibold">
                 Register with email & password
               </h2>

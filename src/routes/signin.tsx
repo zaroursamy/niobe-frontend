@@ -60,66 +60,9 @@ function SignInPage() {
   };
 
   return (
-    <main
-      className="min-h-screen text-foreground flex items-center justify-center px-6 py-16"
-      style={{
-        background:
-          "radial-gradient(circle at 20% 20%, color-mix(in oklch, var(--primary) 22%, var(--background)), color-mix(in oklch, var(--accent) 14%, var(--background)) 42%, var(--background))",
-      }}
-    >
-      <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-        <section className="space-y-6">
-          <div className="inline-flex items-center gap-3 rounded-full bg-[color-mix(in_oklch,var(--accent)_15%,var(--background))] text-accent-foreground px-4 py-2 border border-border">
-            <Sparkles className="w-5 h-5" />
-            <span className="text-sm font-medium">Niobé HR Access</span>
-          </div>
-          <div>
-            <h1 className="text-4xl font-bold leading-tight">
-              Sign in with your email
-            </h1>
-            <p className="mt-3 text-muted-foreground text-lg max-w-xl">
-              Use your work email and a secure password to access your Niobé HR
-              account. The form authenticates against the login endpoint at{" "}
-              <code className="px-2 py-1 rounded bg-card text-primary">
-                http://localhost:8000/auth/login
-              </code>{" "}
-              (sets an HttpOnly cookie and returns a bearer token in the
-              response body).
-            </p>
-          </div>
-          <ul className="space-y-3 text-muted-foreground">
-            <li className="flex items-center gap-3">
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[color-mix(in_oklch,var(--primary)_18%,var(--background))] text-primary font-semibold">
-                1
-              </span>
-              Enter your email and password.
-            </li>
-            <li className="flex items-center gap-3">
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[color-mix(in_oklch,var(--primary)_18%,var(--background))] text-primary font-semibold">
-                2
-              </span>
-              We send the details to your backend login endpoint.
-            </li>
-            <li className="flex items-center gap-3">
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[color-mix(in_oklch,var(--primary)_18%,var(--background))] text-primary font-semibold">
-                3
-              </span>
-              See immediate feedback when authentication succeeds.
-            </li>
-          </ul>
-        </section>
-
+    <main className="min-h-screen text-foreground flex items-center justify-center px-6 py-16">
+      <div className="w-full max-w-md">
         <section className="bg-card border border-border rounded-2xl shadow-xl p-8 backdrop-blur">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="bg-[color-mix(in_oklch,var(--primary)_15%,var(--card))] text-primary p-3 rounded-xl">
-              <Lock className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Secure sign in</p>
-              <h2 className="text-2xl font-semibold">Access your account</h2>
-            </div>
-          </div>
-
           <form className="space-y-6" onSubmit={handleSubmit}>
             <label className="block space-y-2">
               <span className="text-sm font-medium">Email</span>
