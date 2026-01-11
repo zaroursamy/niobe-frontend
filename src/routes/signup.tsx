@@ -1,68 +1,68 @@
-import { useState } from 'react'
+import { useState } from "react";
 
-import { createFileRoute } from '@tanstack/react-router'
-import { Lock, Mail, Sparkles } from 'lucide-react'
+import { createFileRoute } from "@tanstack/react-router";
+import { Lock, Mail, Sparkles } from "lucide-react";
 
-export const Route = createFileRoute('/signup')({
+export const Route = createFileRoute("/signup")({
   component: SignUpPage,
-})
+});
 
-type SubmissionState = 'idle' | 'loading' | 'success' | 'error'
+type SubmissionState = "idle" | "loading" | "success" | "error";
 
 type RegisterResponse = {
-  message?: string
-}
+  message?: string;
+};
 
 function SignUpPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [status, setStatus] = useState<SubmissionState>('idle')
-  const [feedback, setFeedback] = useState('')
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [status, setStatus] = useState<SubmissionState>("idle");
+  const [feedback, setFeedback] = useState("");
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setStatus('loading')
-    setFeedback('')
+    event.preventDefault();
+    setStatus("loading");
+    setFeedback("");
 
     try {
-      const response = await fetch('http://localhost:8000/auth/register', {
-        method: 'POST',
+      const response = await fetch("http://localhost:8000/auth/register", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify({ email, password }),
-      })
+      });
 
-      const data = (await response.json()) as RegisterResponse
+      const data = (await response.json()) as RegisterResponse;
 
       if (!response.ok) {
-        throw new Error(data?.message ?? 'Unable to create account')
+        throw new Error(data?.message ?? "Unable to create account");
       }
 
-      setStatus('success')
-      setFeedback(data?.message ?? 'Account created')
-      setEmail('')
-      setPassword('')
+      setStatus("success");
+      setFeedback(data?.message ?? "Account created");
+      setEmail("");
+      setPassword("");
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : 'Something went wrong'
-      setStatus('error')
-      setFeedback(message)
+        error instanceof Error ? error.message : "Something went wrong";
+      setStatus("error");
+      setFeedback(message);
     }
-  }
+  };
 
   return (
     <main
-      className="min-h-screen text-[color:var(--foreground)] flex items-center justify-center px-6 py-16"
+      className="min-h-screen text-foreground flex items-center justify-center px-6 py-16"
       style={{
         background:
-          'radial-gradient(circle at 20% 20%, color-mix(in oklch, var(--accent) 22%, var(--background)), color-mix(in oklch, var(--primary) 14%, var(--background)) 42%, var(--background))',
+          "radial-gradient(circle at 20% 20%, color-mix(in oklch, var(--accent) 22%, var(--background)), color-mix(in oklch, var(--primary) 14%, var(--background)) 42%, var(--background))",
       }}
     >
       <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
         <section className="space-y-6">
-          <div className="inline-flex items-center gap-3 rounded-full bg-[color-mix(in_oklch,var(--primary)_15%,var(--background))] text-[color:var(--primary)] px-4 py-2 border border-[color:var(--border)]">
+          <div className="inline-flex items-center gap-3 rounded-full bg-[color-mix(in_oklch,var(--primary)_15%,var(--background))] text-primary px-4 py-2 border border-border">
             <Sparkles className="w-5 h-5" />
             <span className="text-sm font-medium">Niobé HR Access</span>
           </div>
@@ -70,16 +70,16 @@ function SignUpPage() {
             <h1 className="text-4xl font-bold leading-tight">
               Create your account
             </h1>
-            <p className="mt-3 text-[color:var(--muted-foreground)] text-lg max-w-xl">
+            <p className="mt-3 text-muted-foreground text-lg max-w-xl">
               Sign up with your work email to get started. The form registers
-              new users through the endpoint at{' '}
-              <code className="px-2 py-1 rounded bg-[color:var(--card)] text-[color:var(--primary)]">
+              new users through the endpoint at{" "}
+              <code className="px-2 py-1 rounded bg-card text-primary">
                 http://localhost:8000/auth/register
-              </code>{' '}
+              </code>{" "}
               (returns a simple confirmation message).
             </p>
           </div>
-          <ul className="space-y-3 text-[color:var(--muted-foreground)]">
+          <ul className="space-y-3 text-muted-foreground">
             <li className="flex items-center gap-3">
               <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[color-mix(in_oklch,var(--primary)_18%,var(--background))] text-[color:var(--primary)] font-semibold">
                 1
@@ -158,17 +158,17 @@ function SignUpPage() {
                 className="rounded-lg border px-4 py-3 text-sm"
                 style={{
                   background:
-                    status === 'error'
-                      ? 'color-mix(in oklch, var(--destructive) 18%, var(--background))'
-                      : 'color-mix(in oklch, var(--primary) 14%, var(--background))',
+                    status === "error"
+                      ? "color-mix(in oklch, var(--destructive) 18%, var(--background))"
+                      : "color-mix(in oklch, var(--primary) 14%, var(--background))",
                   borderColor:
-                    status === 'error'
-                      ? 'color-mix(in oklch, var(--destructive) 35%, var(--border))'
-                      : 'color-mix(in oklch, var(--primary) 35%, var(--border))',
+                    status === "error"
+                      ? "color-mix(in oklch, var(--destructive) 35%, var(--border))"
+                      : "color-mix(in oklch, var(--primary) 35%, var(--border))",
                   color:
-                    status === 'error'
-                      ? 'var(--destructive-foreground)'
-                      : 'var(--foreground)',
+                    status === "error"
+                      ? "var(--destructive-foreground)"
+                      : "var(--foreground)",
                 }}
               >
                 {feedback}
@@ -177,18 +177,18 @@ function SignUpPage() {
 
             <button
               type="submit"
-              disabled={status === 'loading'}
+              disabled={status === "loading"}
               className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] disabled:opacity-60 disabled:cursor-not-allowed font-semibold py-3 transition-all hover:brightness-95"
             >
-              {status === 'loading' ? 'Creating account...' : 'Sign up'}
+              {status === "loading" ? "Creating account..." : "Sign up"}
             </button>
 
             <p className="text-xs text-[color:var(--muted-foreground)]">
-              This form sends a POST request to{' '}
+              This form sends a POST request to{" "}
               <code className="px-2 py-1 rounded bg-[color:var(--card)] text-[color:var(--primary)]">
                 /auth/register
-              </code>{' '}
-              on{' '}
+              </code>{" "}
+              on{" "}
               <code className="px-2 py-1 rounded bg-[color:var(--card)] text-[color:var(--primary)]">
                 http://localhost:8000
               </code>
@@ -198,5 +198,5 @@ function SignUpPage() {
         </section>
       </div>
     </main>
-  )
+  );
 }
