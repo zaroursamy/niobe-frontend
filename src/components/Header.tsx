@@ -64,16 +64,22 @@ export default function Header() {
 
   return (
     <>
-      <header className="p-4 flex items-center justify-between bg-gray-800 text-white shadow-lg">
+      <header
+        className="p-4 flex items-center justify-between shadow-lg text-[color:var(--foreground)]"
+        style={{
+          background:
+            'linear-gradient(135deg, color-mix(in oklch, var(--primary) 12%, var(--background)), color-mix(in oklch, var(--accent) 10%, var(--background)))',
+        }}
+      >
         <div className="flex items-center">
           <button
             onClick={() => setIsOpen(true)}
-            className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
+            className="p-2 rounded-lg transition-colors hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))]"
             aria-label="Open menu"
           >
             <Menu size={24} />
           </button>
-          <h1 className="ml-4 text-xl font-semibold">
+          <h1 className="ml-4 text-xl font-semibold font-[var(--font-sans)] text-[color:var(--foreground)]">
             <Link to="/">
               <img
                 src="/tanstack-word-logo-white.svg"
@@ -111,15 +117,15 @@ export default function Header() {
       </header>
 
       <aside
-        className={`fixed top-0 left-0 h-full w-80 bg-gray-900 text-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out flex flex-col ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
+        className={`fixed top-0 left-0 h-full w-80 bg-[color:var(--background)] text-[color:var(--foreground)] shadow-2xl z-50 transform transition-transform duration-300 ease-in-out flex flex-col ${
+          isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="flex items-center justify-between p-4 border-b border-gray-700">
+        <div className="flex items-center justify-between p-4 border-b border-[color:var(--border)]">
           <h2 className="text-xl font-bold">Navigation</h2>
           <button
             onClick={() => setIsOpen(false)}
-            className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+            className="p-2 hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))] rounded-lg transition-colors"
             aria-label="Close menu"
           >
             <X size={24} />
@@ -130,10 +136,10 @@ export default function Header() {
           <Link
             to="/"
             onClick={() => setIsOpen(false)}
-            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
+            className="flex items-center gap-3 p-3 rounded-lg hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))] transition-colors mb-2"
             activeProps={{
               className:
-                "flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2",
+                'flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2',
             }}
           >
             <Home size={20} />
@@ -144,10 +150,10 @@ export default function Header() {
             <Link
               to="/dashboard"
               onClick={() => setIsOpen(false)}
-              className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
+              className="flex items-center gap-3 p-3 rounded-lg hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))] transition-colors mb-2"
               activeProps={{
                 className:
-                  'flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2',
+                  'flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2',
               }}
             >
               <Home size={20} />
@@ -160,10 +166,10 @@ export default function Header() {
           <Link
             to="/demo/form/simple"
             onClick={() => setIsOpen(false)}
-            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
+            className="flex items-center gap-3 p-3 rounded-lg hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))] transition-colors mb-2"
             activeProps={{
               className:
-                "flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2",
+                'flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2',
             }}
           >
             <ClipboardType size={20} />
@@ -173,10 +179,10 @@ export default function Header() {
           <Link
             to="/demo/form/address"
             onClick={() => setIsOpen(false)}
-            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
+            className="flex items-center gap-3 p-3 rounded-lg hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))] transition-colors mb-2"
             activeProps={{
               className:
-                "flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2",
+                'flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2',
             }}
           >
             <ClipboardType size={20} />
@@ -186,10 +192,10 @@ export default function Header() {
           <Link
             to="/demo/tanstack-query"
             onClick={() => setIsOpen(false)}
-            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
+            className="flex items-center gap-3 p-3 rounded-lg hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))] transition-colors mb-2"
             activeProps={{
               className:
-                "flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2",
+                'flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2',
             }}
           >
             <Network size={20} />
@@ -199,10 +205,10 @@ export default function Header() {
           <Link
             to="/demo/start/server-funcs"
             onClick={() => setIsOpen(false)}
-            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
+            className="flex items-center gap-3 p-3 rounded-lg hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))] transition-colors mb-2"
             activeProps={{
               className:
-                "flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2",
+                'flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2',
             }}
           >
             <SquareFunction size={20} />
@@ -212,10 +218,10 @@ export default function Header() {
           <Link
             to="/demo/start/api-request"
             onClick={() => setIsOpen(false)}
-            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
+            className="flex items-center gap-3 p-3 rounded-lg hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))] transition-colors mb-2"
             activeProps={{
               className:
-                "flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2",
+                'flex items-center gap-3 p-3 rounded-lg bg-[color:var(--primary)] text-[color:var(--primary-foreground)] transition-colors mb-2',
             }}
           >
             <Network size={20} />
