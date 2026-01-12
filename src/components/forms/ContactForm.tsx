@@ -1,37 +1,37 @@
-import type { CSSProperties } from 'react';
+import type { CSSProperties } from "react";
 
-import { useForm } from '@tanstack/react-form';
-import { toast } from 'sonner';
-import { z } from 'zod';
+import { useForm } from "@tanstack/react-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Field,
   FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 
 const contactFormSchema = z.object({
   firstName: z
     .string()
     .trim()
-    .min(2, 'First name must be at least 2 characters.')
-    .max(50, 'First name must be at most 50 characters.'),
+    .min(2, "First name must be at least 2 characters.")
+    .max(50, "First name must be at most 50 characters."),
   lastName: z
     .string()
     .trim()
-    .min(2, 'Last name must be at least 2 characters.')
-    .max(50, 'Last name must be at most 50 characters.'),
-  email: z.string().trim().email('Enter a valid email.'),
+    .min(2, "Last name must be at least 2 characters.")
+    .max(50, "Last name must be at most 50 characters."),
+  email: z.string().trim().email("Enter a valid email."),
   company: z
     .string()
     .trim()
-    .max(80, 'Company name must be at most 80 characters.')
+    .max(80, "Company name must be at most 80 characters.")
     .optional()
-    .or(z.literal('')),
+    .or(z.literal("")),
 });
 
 export type ContactFormValues = z.infer<typeof contactFormSchema>;
@@ -43,10 +43,10 @@ type ContactFormProps = {
 export default function ContactForm({ onSubmit }: ContactFormProps) {
   const form = useForm({
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      company: '',
+      firstName: "",
+      lastName: "",
+      email: "",
+      company: "",
     },
     validators: {
       onSubmit: contactFormSchema,
@@ -55,28 +55,30 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
       try {
         await onSubmit?.(value);
 
-        toast('We received your request', {
+        toast("We received your request", {
           description: (
             <pre className="bg-code text-code-foreground mt-2 w-[320px] overflow-x-auto rounded-md p-4">
               <code>{JSON.stringify(value, null, 2)}</code>
             </pre>
           ),
-          position: 'bottom-right',
+          position: "bottom-right",
           classNames: {
-            content: 'flex flex-col gap-2',
+            content: "flex flex-col gap-2",
           },
           style: {
-            '--border-radius': 'calc(var(--radius) + 4px)',
+            "--border-radius": "calc(var(--radius) + 4px)",
           } as CSSProperties,
         });
 
         formApi.reset();
       } catch (error) {
         const message =
-          error instanceof Error ? error.message : 'Please try again in a few seconds.';
-        toast.error('Unable to send your request', {
+          error instanceof Error
+            ? error.message
+            : "Please try again in a few seconds.";
+        toast.error("Unable to send your request", {
           description: message,
-          position: 'bottom-right',
+          position: "bottom-right",
         });
       }
     },
@@ -95,7 +97,8 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
           <form.Field
             name="firstName"
             children={(field) => {
-              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
 
               return (
                 <Field data-invalid={isInvalid}>
@@ -119,7 +122,8 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
           <form.Field
             name="lastName"
             children={(field) => {
-              const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
 
               return (
                 <Field data-invalid={isInvalid}>
@@ -144,7 +148,8 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
         <form.Field
           name="email"
           children={(field) => {
-            const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
 
             return (
               <Field data-invalid={isInvalid}>
@@ -170,7 +175,9 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
           name="company"
           children={(field) => {
             const isInvalid =
-              field.state.meta.isTouched && field.state.value !== '' && !field.state.meta.isValid;
+              field.state.meta.isTouched &&
+              field.state.value !== "" &&
+              !field.state.meta.isValid;
 
             return (
               <Field data-invalid={isInvalid}>
@@ -184,7 +191,9 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
                   aria-invalid={isInvalid}
                   placeholder="Acme Corp"
                 />
-                <FieldDescription>Optional, but it helps us tailor the demo.</FieldDescription>
+                <FieldDescription>
+                  Optional, but it helps us tailor the demo.
+                </FieldDescription>
                 {isInvalid && <FieldError errors={field.state.meta.errors} />}
               </Field>
             );
@@ -194,7 +203,7 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
 
       <Field orientation="horizontal" className="items-center justify-between">
         <FieldDescription className="text-xs text-muted-foreground">
-          The fields marked * are required.
+          * required.
         </FieldDescription>
         <div className="flex gap-2">
           <Button type="button" variant="outline" onClick={() => form.reset()}>
@@ -203,7 +212,7 @@ export default function ContactForm({ onSubmit }: ContactFormProps) {
           <form.Subscribe selector={(state) => state.isSubmitting}>
             {(isSubmitting) => (
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Sending...' : 'Send'}
+                {isSubmitting ? "Sending..." : "Send"}
               </Button>
             )}
           </form.Subscribe>
