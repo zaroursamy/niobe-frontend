@@ -6,7 +6,7 @@ import { Home, LayoutDashboard, Menu, X } from "lucide-react";
 import ContactButton from "./buttons/ContactButton";
 import SignInButton from "./buttons/SignInButton";
 import SignOutButton from "./buttons/SignOutButton";
-import { Button } from "./ui/button";
+import SignUpButton from "./buttons/SignUpButton";
 
 export default function Header() {
   const routerState = useRouterState();
@@ -76,9 +76,7 @@ export default function Header() {
             <>
               <ContactButton className="mr-4" />
               <SignInButton />
-              <Button asChild variant="secondary">
-                <Link to="/signup">Sign up</Link>
-              </Button>
+              <SignUpButton />
             </>
           )}
         </div>
