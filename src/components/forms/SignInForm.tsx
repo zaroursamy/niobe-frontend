@@ -1,127 +1,196 @@
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 
+import { useForm } from "@tanstack/react-form";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { z } from "zod";
 
-type SubmissionState = "idle" | "loading" | "success" | "error";
+import { Button } from "@/components/ui/button";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText,
+} from "@/components/ui/input-group";
+
+const formSchema = z.object({
+  email: z.string().trim().email("Enter a valid email."),
+  password: z.string().min(8, "Password must be at least 8 characters."),
+});
 
 type LoginResponse = {
   access_token?: string;
   token_type?: string;
+  message?: string;
+};
+
+type FormStatus = {
+  error?: string;
+  success?: string;
 };
 
 export default function SignInForm() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [status, setStatus] = useState<SubmissionState>("idle");
-  const [feedback, setFeedback] = useState("");
+  const [status, setStatus] = useState<FormStatus>({});
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setStatus("loading");
-    setFeedback("");
+  const form = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    validators: {
+      onSubmit: formSchema,
+    },
+    onSubmit: async ({ value, formApi }) => {
+      setStatus({});
 
-    try {
-      const response = await fetch("http://localhost:8000/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ email, password }),
-      });
+      try {
+        const response = await fetch("http://localhost:8000/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(value),
+        });
 
-      const data = (await response.json()) as LoginResponse;
+        const data = (await response.json()) as LoginResponse;
 
-      if (!response.ok) {
-        throw new Error("Unable to sign in");
+        if (!response.ok) {
+          throw new Error(data?.message ?? "Unable to sign in");
+        }
+
+        setStatus({
+          success: data?.access_token
+            ? `Signed in. Token type: ${data.token_type ?? "bearer"}`
+            : "Signed in successfully",
+        });
+        formApi.reset();
+        await navigate({ to: "/dashboard" });
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Something went wrong";
+        setStatus({ error: message });
       }
-
-      setStatus("success");
-      setFeedback(
-        data?.access_token
-          ? `Signed in. Token type: ${data.token_type ?? "bearer"}`
-          : "Signed in successfully",
-      );
-      setEmail("");
-      setPassword("");
-      await navigate({ to: "/dashboard" });
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Something went wrong";
-      setStatus("error");
-      setFeedback(message);
-    }
-  };
+    },
+  });
 
   return (
-    <form className="space-y-6" onSubmit={handleSubmit}>
-      <label className="flex flex-col gap-2 text-left">
-        <span className="text-sm font-semibold">Email *</span>
-        <input
-          type="email"
+    <form
+      className="space-y-6 rounded-xl border bg-card/60 p-6 shadow-sm"
+      onSubmit={(event) => {
+        event.preventDefault();
+        void form.handleSubmit();
+      }}
+    >
+      <FieldGroup>
+        <form.Field
           name="email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          required
-          autoComplete="email"
-          placeholder="you@company.com"
-          className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground focus:border-primary focus:outline-none"
-        />
-      </label>
+          children={(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
 
-      <label className="flex flex-col gap-2 text-left">
-        <span className="text-sm font-semibold">Password *</span>
-        <input
-          type="password"
-          name="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          required
-          minLength={8}
-          autoComplete="current-password"
-          placeholder="At least 8 characters"
-          className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground focus:border-primary focus:outline-none"
-        />
-      </label>
-
-      {feedback && (
-        <div
-          role="status"
-          className="rounded-lg border px-4 py-3 text-sm"
-          style={{
-            background:
-              status === "error"
-                ? "color-mix(in oklch, var(--destructive) 18%, var(--background))"
-                : "color-mix(in oklch, var(--primary) 14%, var(--background))",
-            borderColor:
-              status === "error"
-                ? "color-mix(in oklch, var(--destructive) 35%, var(--border))"
-                : "color-mix(in oklch, var(--primary) 35%, var(--border))",
-            color:
-              status === "error"
-                ? "var(--destructive-foreground)"
-                : "var(--foreground)",
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Email *</FieldLabel>
+                <Input
+                  id={field.name}
+                  name={field.name}
+                  type="email"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(event) => field.handleChange(event.target.value)}
+                  aria-invalid={isInvalid}
+                  placeholder="you@company.com"
+                  autoComplete="email"
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            );
           }}
-        >
-          {feedback}
-        </div>
+        />
+
+        <form.Field
+          name="password"
+          children={(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
+
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Password *</FieldLabel>
+                <InputGroup>
+                  <InputGroupInput
+                    id={field.name}
+                    name={field.name}
+                    type="password"
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(event) => field.handleChange(event.target.value)}
+                    aria-invalid={isInvalid}
+                    placeholder="At least 8 characters"
+                    autoComplete="current-password"
+                  />
+                </InputGroup>
+                <FieldDescription>
+                  Use a strong password to keep your account safe.
+                </FieldDescription>
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            );
+          }}
+        />
+      </FieldGroup>
+
+      {status.error && (
+        <p className="rounded-md border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          {status.error}
+        </p>
+      )}
+      {status.success && (
+        <p className="rounded-md border border-primary/40 bg-primary/10 px-4 py-3 text-sm text-primary">
+          {status.success}
+        </p>
       )}
 
-      <div className="flex items-center justify-between">
-        <p className="text-xs text-muted-foreground">Fields marked * are required.</p>
-        <button
-          type="submit"
-          disabled={status === "loading"}
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary text-primary-foreground disabled:opacity-60 disabled:cursor-not-allowed font-semibold px-5 py-2 transition-all hover:brightness-95"
-        >
-          {status === "loading" ? "Sending..." : "Sign in"}
-        </button>
-      </div>
+      <Field orientation="horizontal" className="items-center justify-between">
+        <FieldDescription className="text-xs text-muted-foreground">
+          * required.
+        </FieldDescription>
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              setStatus({});
+              form.reset();
+            }}
+          >
+            Reset
+          </Button>
+          <form.Subscribe selector={(state) => state.isSubmitting}>
+            {(isSubmitting) => (
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Sending..." : "Sign in"}
+              </Button>
+            )}
+          </form.Subscribe>
+        </div>
+      </Field>
 
-      <p className="text-xs text-muted-foreground text-center">
-        You don't have an account ?{" "}
-        <Link to="/signup" className="font-semibold text-primary hover:underline">
+      <p className="text-center text-xs text-muted-foreground">
+        You don&apos;t have an account?{" "}
+        <Link
+          to="/signup"
+          className="font-semibold text-primary hover:underline"
+        >
           Sign up
         </Link>
       </p>

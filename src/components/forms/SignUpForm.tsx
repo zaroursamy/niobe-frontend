@@ -1,120 +1,188 @@
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 
+import { useForm } from "@tanstack/react-form";
 import { Link } from "@tanstack/react-router";
+import { z } from "zod";
 
-type SubmissionState = "idle" | "loading" | "success" | "error";
+import { Button } from "@/components/ui/button";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText,
+} from "@/components/ui/input-group";
+
+const formSchema = z.object({
+  email: z.string().trim().email("Enter a valid email."),
+  password: z.string().min(8, "Password must be at least 8 characters."),
+});
 
 type RegisterResponse = {
   message?: string;
 };
 
+type FormStatus = {
+  error?: string;
+  success?: string;
+};
+
 export default function SignUpForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [status, setStatus] = useState<SubmissionState>("idle");
-  const [feedback, setFeedback] = useState("");
+  const [status, setStatus] = useState<FormStatus>({});
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setStatus("loading");
-    setFeedback("");
+  const form = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    validators: {
+      onSubmit: formSchema,
+    },
+    onSubmit: async ({ value, formApi }) => {
+      setStatus({});
 
-    try {
-      const response = await fetch("http://localhost:8000/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ email, password }),
-      });
+      try {
+        const response = await fetch("http://localhost:8000/auth/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(value),
+        });
 
-      const data = (await response.json()) as RegisterResponse;
+        const data = (await response.json()) as RegisterResponse;
 
-      if (!response.ok) {
-        throw new Error(data?.message ?? "Unable to create account");
+        if (!response.ok) {
+          throw new Error(data?.message ?? "Unable to create account");
+        }
+
+        setStatus({ success: data?.message ?? "Account created" });
+        formApi.reset();
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Something went wrong";
+        setStatus({ error: message });
       }
-
-      setStatus("success");
-      setFeedback(data?.message ?? "Account created");
-      setEmail("");
-      setPassword("");
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Something went wrong";
-      setStatus("error");
-      setFeedback(message);
-    }
-  };
+    },
+  });
 
   return (
-    <form className="space-y-6" onSubmit={handleSubmit}>
-      <label className="flex flex-col gap-2 text-left">
-        <span className="text-sm font-semibold">Email *</span>
-        <input
-          type="email"
+    <form
+      className="space-y-6 rounded-xl border bg-card/60 p-6 shadow-sm"
+      onSubmit={(event) => {
+        event.preventDefault();
+        void form.handleSubmit();
+      }}
+    >
+      <FieldGroup>
+        <form.Field
           name="email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          required
-          autoComplete="email"
-          placeholder="you@company.com"
-          className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground focus:border-primary focus:outline-none"
-        />
-      </label>
+          children={(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
 
-      <label className="flex flex-col gap-2 text-left">
-        <span className="text-sm font-semibold">Password *</span>
-        <input
-          type="password"
-          name="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          required
-          minLength={8}
-          autoComplete="new-password"
-          placeholder="At least 8 characters"
-          className="w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground focus:border-primary focus:outline-none"
-        />
-      </label>
-
-      {feedback && (
-        <div
-          role="status"
-          className="rounded-lg border px-4 py-3 text-sm"
-          style={{
-            background:
-              status === "error"
-                ? "color-mix(in oklch, var(--destructive) 18%, var(--background))"
-                : "color-mix(in oklch, var(--primary) 14%, var(--background))",
-            borderColor:
-              status === "error"
-                ? "color-mix(in oklch, var(--destructive) 35%, var(--border))"
-                : "color-mix(in oklch, var(--primary) 35%, var(--border))",
-            color:
-              status === "error"
-                ? "var(--destructive-foreground)"
-                : "var(--foreground)",
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Email *</FieldLabel>
+                <Input
+                  id={field.name}
+                  name={field.name}
+                  type="email"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(event) => field.handleChange(event.target.value)}
+                  aria-invalid={isInvalid}
+                  placeholder="you@company.com"
+                  autoComplete="email"
+                />
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            );
           }}
-        >
-          {feedback}
-        </div>
+        />
+
+        <form.Field
+          name="password"
+          children={(field) => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
+
+            return (
+              <Field data-invalid={isInvalid}>
+                <FieldLabel htmlFor={field.name}>Password *</FieldLabel>
+                <InputGroup>
+                  <InputGroupInput
+                    id={field.name}
+                    name={field.name}
+                    type="password"
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(event) => field.handleChange(event.target.value)}
+                    aria-invalid={isInvalid}
+                    placeholder="At least 8 characters"
+                    autoComplete="new-password"
+                  />
+                </InputGroup>
+                <FieldDescription>
+                  Passwords must include at least eight characters.
+                </FieldDescription>
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </Field>
+            );
+          }}
+        />
+      </FieldGroup>
+
+      {status.error && (
+        <p className="rounded-md border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          {status.error}
+        </p>
+      )}
+      {status.success && (
+        <p className="rounded-md border border-primary/40 bg-primary/10 px-4 py-3 text-sm text-primary">
+          {status.success}
+        </p>
       )}
 
-      <div className="flex items-center justify-between">
-        <p className="text-xs text-muted-foreground">Fields marked * are required.</p>
-        <button
-          type="submit"
-          disabled={status === "loading"}
-          className="inline-flex items-center justify-center gap-2 rounded-lg bg-primary text-primary-foreground disabled:opacity-60 disabled:cursor-not-allowed font-semibold px-5 py-2 transition-all hover:brightness-95"
-        >
-          {status === "loading" ? "Creating..." : "Sign up"}
-        </button>
-      </div>
+      <Field orientation="horizontal" className="items-center justify-between">
+        <FieldDescription className="text-xs text-muted-foreground">
+          * required.
+        </FieldDescription>
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              setStatus({});
+              form.reset();
+            }}
+          >
+            Reset
+          </Button>
+          <form.Subscribe selector={(state) => state.isSubmitting}>
+            {(isSubmitting) => (
+              <Button type="submit" variant="secondary" disabled={isSubmitting}>
+                {isSubmitting ? "Creating..." : "Sign up"}
+              </Button>
+            )}
+          </form.Subscribe>
+        </div>
+      </Field>
 
-      <p className="text-xs text-muted-foreground text-center">
+      <p className="text-center text-xs text-muted-foreground">
         Already have an account?{" "}
-        <Link to="/signin" className="font-semibold text-primary hover:underline">
+        <Link
+          to="/signin"
+          className="font-semibold text-primary hover:underline"
+        >
           Sign in
         </Link>
       </p>

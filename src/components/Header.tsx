@@ -5,6 +5,7 @@ import { Home, LayoutDashboard, Menu, X } from "lucide-react";
 
 import SignInButton from "./buttons/SignInButton";
 import SignOutButton from "./buttons/SignOutButton";
+import { Button } from "./ui/button";
 
 export default function Header() {
   const routerState = useRouterState();
@@ -73,12 +74,9 @@ export default function Header() {
           ) : (
             <>
               <SignInButton />
-              <Link
-                to="/signup"
-                className="px-4 py-2 rounded-lg font-semibold transition-all text-accent-foreground bg-accent hover:brightness-95"
-              >
-                Sign up
-              </Link>
+              <Button asChild variant="secondary">
+                <Link to="/signup">Sign up</Link>
+              </Button>
             </>
           )}
         </div>

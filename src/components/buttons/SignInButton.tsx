@@ -1,16 +1,18 @@
-import { Link } from "@tanstack/react-router";
+import type { ComponentProps } from 'react';
 
-type SignInButtonProps = {
-  className?: string;
-};
+import { Link } from '@tanstack/react-router';
 
-export default function SignInButton({ className = "" }: SignInButtonProps) {
+import { Button } from '@/components/ui/button';
+
+type SignInButtonProps = Omit<
+  ComponentProps<typeof Button>,
+  'asChild' | 'children'
+>;
+
+export default function SignInButton({ className, ...props }: SignInButtonProps) {
   return (
-    <Link
-      to="/signin"
-      className={`px-4 py-2 rounded-lg font-semibold transition-all text-primary-foreground bg-primary hover:brightness-95 ${className}`}
-    >
-      Sign in
-    </Link>
+    <Button asChild className={className} {...props}>
+      <Link to="/signin">Sign in</Link>
+    </Button>
   );
 }
