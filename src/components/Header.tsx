@@ -3,6 +3,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Home, LayoutDashboard, Menu, X } from "lucide-react";
 
+import ContactButton from "./buttons/ContactButton";
 import SignInButton from "./buttons/SignInButton";
 import SignOutButton from "./buttons/SignOutButton";
 import { Button } from "./ui/button";
@@ -73,6 +74,7 @@ export default function Header() {
             <SignOutButton onSignedOut={handleSignedOut} />
           ) : (
             <>
+              <ContactButton className="mr-4" />
               <SignInButton />
               <Button asChild variant="secondary">
                 <Link to="/signup">Sign up</Link>

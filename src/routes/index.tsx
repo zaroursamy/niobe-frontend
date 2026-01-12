@@ -8,6 +8,8 @@ import {
   Upload,
 } from "lucide-react";
 
+import ContactButton from "@/components/buttons/ContactButton";
+
 export const Route = createFileRoute("/")({ component: App });
 
 function App() {
@@ -85,13 +87,10 @@ function App() {
               Reduce risks of hiring the wrong profiles.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
-              <Link
-                to="/contact"
-                className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-semibold transition-colors flex items-center gap-2 shadow-lg shadow-black/30 hover:brightness-110"
-              >
+              <ContactButton className="shadow-lg shadow-black/30 hover:brightness-110 gap-2">
                 Book a demo
                 <ArrowRight className="w-4 h-4" />
-              </Link>
+              </ContactButton>
               <a
                 href="#how-it-works"
                 className="text-foreground hover:text-primary underline-offset-4 hover:underline"

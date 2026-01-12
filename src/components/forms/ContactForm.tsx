@@ -29,9 +29,7 @@ const contactFormSchema = z.object({
   company: z
     .string()
     .trim()
-    .max(80, "Company name must be at most 80 characters.")
-    .optional()
-    .or(z.literal("")),
+    .max(80, "Company name must be at most 80 characters."),
 });
 
 export type ContactFormValues = z.infer<typeof contactFormSchema>;
