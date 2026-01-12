@@ -16,7 +16,7 @@ export default function SignUpButton({
 }: SignUpButtonProps) {
   return (
     <Button asChild className={className} variant={variant} {...props}>
-      <Link to="/signup">Sign up</Link>
+      <Link to="/auth/signup">Sign up</Link>
     </Button>
   );
 }

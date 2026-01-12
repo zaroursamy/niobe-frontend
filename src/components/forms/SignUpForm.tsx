@@ -180,7 +180,7 @@ export default function SignUpForm() {
       <p className="text-center text-xs text-muted-foreground">
         Already have an account?{" "}
         <Link
-          to="/signin"
+          to="/auth/signin"
           className="font-semibold text-primary hover:underline"
         >
           Sign in

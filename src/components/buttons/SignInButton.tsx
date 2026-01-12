@@ -12,7 +12,7 @@ type SignInButtonProps = Omit<
 export default function SignInButton({ className, ...props }: SignInButtonProps) {
   return (
     <Button asChild className={className} {...props}>
-      <Link to="/signin">Sign in</Link>
+      <Link to="/auth/signin">Sign in</Link>
     </Button>
   );
 }

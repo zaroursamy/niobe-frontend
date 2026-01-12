@@ -183,7 +183,7 @@ export default function SignInForm() {
       <p className="text-center text-xs text-muted-foreground">
         You don&apos;t have an account?{" "}
         <Link
-          to="/signup"
+          to="/auth/signup"
           className="font-semibold text-primary hover:underline"
         >
           Sign up
