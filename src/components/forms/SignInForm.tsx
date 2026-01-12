@@ -79,7 +79,7 @@ export default function SignInForm() {
 
   return (
     <form
-      className="space-y-6 rounded-xl border bg-card/60 p-6 shadow-sm"
+      className="space-y-6 "
       onSubmit={(event) => {
         event.preventDefault();
         void form.handleSubmit();
