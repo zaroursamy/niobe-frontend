@@ -7,6 +7,7 @@ import ContactButton from "./buttons/ContactButton";
 import SignInButton from "./buttons/SignInButton";
 import SignOutButton from "./buttons/SignOutButton";
 import SignUpButton from "./buttons/SignUpButton";
+import { ModeToggle } from "./mode-toggle";
 
 export default function Header() {
   const routerState = useRouterState();
@@ -77,6 +78,7 @@ export default function Header() {
               <ContactButton className="mr-4" />
               <SignInButton />
               <SignUpButton />
+              <ModeToggle />
             </>
           )}
         </div>

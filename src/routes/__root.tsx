@@ -17,6 +17,8 @@ interface MyRouterContext {
   queryClient: QueryClient;
 }
 
+import { ThemeProvider } from "@/components/theme-provider";
+
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   head: () => ({
     meta: [
@@ -49,8 +51,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <Header />
-        {children}
+        <ThemeProvider>
+          <Header />
+          {children}
+        </ThemeProvider>
+
         {/*<TanStackDevtools
           config={{
             position: 'bottom-right',

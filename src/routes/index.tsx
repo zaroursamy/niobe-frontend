@@ -1,7 +1,6 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import {
   ArrowRight,
-  CalendarClock,
   CheckCircle2,
   ClipboardList,
   Sparkles,
