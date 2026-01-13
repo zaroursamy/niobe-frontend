@@ -19,6 +19,7 @@ interface MyRouterContext {
 }
 
 import { ThemeProvider } from "@/components/theme-provider";
+import { AuthProvider } from "@/hooks/use-auth";
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   head: () => ({
@@ -54,8 +55,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <ThemeProvider>
-          <Header />
-          {children}
+          <AuthProvider>
+            <Header />
+            {children}
+          </AuthProvider>
         </ThemeProvider>
 
         {/*<TanStackDevtools

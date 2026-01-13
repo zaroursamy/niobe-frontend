@@ -5,7 +5,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 
 type SignOutButtonProps = {
-  onSignedOut?: () => void;
+  onSignedOut?: () => Promise<void> | void;
   className?: string;
 };
 
@@ -19,14 +19,17 @@ export default function SignOutButton({
   const handleSignOut = async () => {
     setLoading(true);
     try {
-      await fetch('http://localhost:8000/auth/logout', {
-        method: 'POST',
-        credentials: 'include',
-      });
+      if (onSignedOut) {
+        await onSignedOut();
+      } else {
+        await fetch('http://localhost:8000/auth/logout', {
+          method: 'POST',
+          credentials: 'include',
+        });
+      }
     } catch (error) {
       console.error('Logout failed', error);
     } finally {
-      onSignedOut?.();
       setLoading(false);
       await navigate({ to: '/' });
     }

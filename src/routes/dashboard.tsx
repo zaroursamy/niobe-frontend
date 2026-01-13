@@ -1,38 +1,21 @@
-import { createFileRoute, isRedirect, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 
-import { API_BASE_URL, checkAuth, fetchWithRefresh } from "@/lib/auth";
+import { requireAuth } from "@/lib/middleware/auth";
+import type { AuthUser } from "@/lib/auth";
 
-type MeResponse = {
-  email?: string | null;
-};
+type DashboardContext = { user: AuthUser };
 
-type DashboardContext = {
-  user: MeResponse;
-};
 export const Route = createFileRoute("/dashboard")({
   beforeLoad: async ({ location }) => {
-    console.log("🔍 beforeLoad called at:", new Date().toISOString());
-
-    try {
-      const user = await checkAuth();
-      console.log("✅ User authenticated:", user.email);
-      return { user } satisfies DashboardContext;
-    } catch (error) {
-      console.error("❌ Auth failed:", error);
-      if (isRedirect(error)) throw error;
-
-      throw redirect({
-        to: "/auth/signin",
-        search: { redirect: location.href },
-      });
-    }
+    const { user } = await requireAuth({ location });
+    return { user } satisfies DashboardContext;
   },
   component: DashboardPage,
 });
 
 function DashboardPage() {
   const { user } = Route.useRouteContext() as DashboardContext;
-  const email = user.email ?? "teammate";
+  const email = user.email;
 
   return (
     <main className="min-h-screen text-foreground flex items-center justify-center px-6 py-16">

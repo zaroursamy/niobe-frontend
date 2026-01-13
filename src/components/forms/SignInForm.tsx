@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
+import { useAuth } from "@/hooks/use-auth";
 
 const formSchema = z.object({
   email: z.string().trim().email("Enter a valid email."),
@@ -33,6 +34,7 @@ type FormStatus = {
 
 export default function SignInForm() {
   const navigate = useNavigate();
+  const { refreshUser } = useAuth();
   const [status, setStatus] = useState<FormStatus>({});
 
   const form = useForm({
@@ -68,6 +70,7 @@ export default function SignInForm() {
             : "Signed in successfully",
         });
         formApi.reset();
+        await refreshUser();
         await navigate({ to: "/dashboard" });
       } catch (error) {
         const message =

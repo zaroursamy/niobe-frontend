@@ -4,80 +4,104 @@ const API_BASE_URL = "http://localhost:8000";
 
 const defaultCredentials: RequestCredentials = "include";
 
-// src/lib/auth.ts
-let isCheckingAuth = false;
-let authPromise: any = null;
-let refreshPromise: any = null;
-export async function checkAuth() {
-  // Évite les appels simultanés
-  if (isCheckingAuth && authPromise) {
-    return authPromise;
+let authRequest: Promise<AuthUser> | null = null;
+
+async function buildRequestInit(init: RequestInit = {}) {
+  console.debug("request init", init);
+  const headers = new Headers(init.headers ?? {});
+
+  if (import.meta.env.SSR && !headers.has("cookie")) {
+    console.log("We are in SSR without cookie in headers.", headers);
+    const cookieHeader = await getSsrCookieHeader();
+    if (cookieHeader) headers.set("cookie", cookieHeader);
   }
 
-  isCheckingAuth = true;
-  authPromise = fetchWithRefresh(`${API_BASE_URL}/auth/me`)
-    .then(async (response) => {
-      console.log("Response from fetchWithRefresh", response);
-      if (!response.ok) {
-        throw new Error("Unauthorized");
-      }
-      return response.json();
-    })
-    .finally(() => {
-      isCheckingAuth = false;
-      authPromise = null;
-    });
+  console.log("Init credentials", init.credentials);
+  const credentials = init.credentials ?? defaultCredentials;
+  console.log("credentials", defaultCredentials);
+  return {
+    ...init,
+    headers,
+    credentials: credentials,
+  } satisfies RequestInit;
+}
 
-  return authPromise;
+async function getSsrCookieHeader() {
+  console.debug("Getting ssr cookie header ...");
+  try {
+    const { getRequest } = await import("@tanstack/react-start/server");
+
+    const cookie = getRequest().headers.get("cookie") ?? undefined;
+
+    console.log("cookie from getRequest", cookie);
+    return cookie;
+  } catch (err) {
+    console.error(err);
+    return undefined;
+  }
+}
+
+export type AuthUser = {
+  email: string;
+};
+
+export function clearAuthCache() {
+  authRequest = null;
+}
+
+export async function checkAuth(options: { useCache?: boolean } = {}): Promise<AuthUser> {
+  const useCache = options.useCache ?? true;
+
+  if (useCache && authRequest) {
+    return authRequest;
+  }
+
+  authRequest = (async () => {
+    const response = await fetchWithRefresh(`${API_BASE_URL}/auth/me`);
+
+    console.log("Response from fetchWithRefresh", response);
+    if (!response.ok) {
+      throw new Error("Unauthorized");
+    }
+
+    return response.json() as Promise<AuthUser>;
+  })();
+
+  try {
+    return await authRequest;
+  } catch (error) {
+    clearAuthCache();
+    throw error;
+  }
 }
 
 // src/lib/auth.ts
 export async function refreshSession(): Promise<void> {
-  if (refreshPromise) {
-    console.log("⏳ Refresh already in progress, waiting...");
-    return refreshPromise;
-  }
-
   console.log("🔄 Starting refresh...");
   console.log("📍 URL:", `${API_BASE_URL}/auth/refresh`);
-  console.log("🍪 Current cookies:", document.cookie);
+  console.log("🍪 Current cookies:", await getSsrCookieHeader());
 
-  refreshPromise = fetch(`${API_BASE_URL}/auth/refresh`, {
-    method: "POST",
-    credentials: "include",
-  })
-    .then(async (response) => {
-      console.log("📥 Refresh response status:", response.status);
-      console.log("📥 Refresh response ok:", response.ok);
+  const requestInit = await buildRequestInit({ method: "POST" });
+  const response = await fetch(`${API_BASE_URL}/auth/refresh`, requestInit);
 
-      if (!response.ok) {
-        const text = await response.text();
-        console.error("❌ Refresh failed body:", text);
-        throw new Error(`Refresh failed: ${response.status} - ${text}`);
-      }
+  console.log("📥 Refresh response status:", response.status);
+  console.log("📥 Refresh response ok:", response.ok);
 
-      const data = await response.json();
-      console.log("✅ Refresh successful, data:", data);
-    })
-    .catch((error) => {
-      console.error("💥 Refresh error:", error);
-      throw error;
-    })
-    .finally(() => {
-      refreshPromise = null;
-    });
+  if (!response.ok) {
+    const text = await response.text();
+    console.error("❌ Refresh failed body:", text);
+    throw new Error(`Refresh failed: ${response.status} - ${text}`);
+  }
 
-  return refreshPromise;
+  const data = await response.json();
+  console.log("✅ Refresh successful, data:", data);
 }
 
 export async function fetchWithRefresh(
   input: FetchInput,
   init: RequestInit = {},
 ) {
-  const requestInit = {
-    ...init,
-    credentials: init.credentials ?? defaultCredentials,
-  } satisfies RequestInit;
+  const requestInit = await buildRequestInit(init);
 
   const firstResponse = await fetch(input, requestInit);
 
