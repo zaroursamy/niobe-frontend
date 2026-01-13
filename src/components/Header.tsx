@@ -3,6 +3,8 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Home, LayoutDashboard, Menu, X } from "lucide-react";
 
+import { API_BASE_URL, fetchWithRefresh } from "@/lib/auth";
+
 import ContactButton from "./buttons/ContactButton";
 import SignInButton from "./buttons/SignInButton";
 import SignOutButton from "./buttons/SignOutButton";
@@ -23,9 +25,7 @@ export default function Header() {
 
     const loadAuth = async () => {
       try {
-        const response = await fetch("http://localhost:8000/auth/me", {
-          credentials: "include",
-        });
+        const response = await fetchWithRefresh(`${API_BASE_URL}/auth/me`);
         if (!isCurrent) return;
         setIsAuthenticated(response.ok);
       } catch (error) {
@@ -71,7 +71,7 @@ export default function Header() {
           </h1>
         </div>
         <div className="ml-6 flex items-center gap-3">
-          {isAuthenticated ? (
+          {checkingAuth ? null : isAuthenticated ? (
             <SignOutButton onSignedOut={handleSignedOut} />
           ) : (
             <>
