@@ -1,6 +1,8 @@
+import { BACKEND_URL } from "@/lib/config";
+
 type FetchInput = RequestInfo | URL;
 
-const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = BACKEND_URL;
 
 const defaultCredentials: RequestCredentials = "include";
 
@@ -124,3 +126,4 @@ export async function fetchWithRefresh(
 }
 
 export { API_BASE_URL };
+export { BACKEND_URL };

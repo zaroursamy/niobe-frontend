@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Home, LayoutDashboard, Menu, X } from "lucide-react";
+import { Home, LayoutDashboard, Menu, Users, X } from "lucide-react";
 
 import ContactButton from "./buttons/ContactButton";
 import SignInButton from "./buttons/SignInButton";
@@ -92,18 +92,33 @@ export default function Header() {
           </Link>
 
           {isAuthenticated && (
-            <Link
-              to="/dashboard"
-              onClick={() => setIsOpen(false)}
-              className="flex items-center gap-3 p-3 rounded-lg hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))] transition-colors mb-2"
-              activeProps={{
-                className:
-                  "flex items-center gap-3 p-3 rounded-lg bg-primary text-primary-foreground transition-colors mb-2",
-              }}
-            >
-              <LayoutDashboard size={20} />
-              <span className="font-medium">Dashboard</span>
-            </Link>
+            <>
+              <Link
+                to="/dashboard"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))] transition-colors mb-2"
+                activeProps={{
+                  className:
+                    "flex items-center gap-3 p-3 rounded-lg bg-primary text-primary-foreground transition-colors mb-2",
+                }}
+              >
+                <LayoutDashboard size={20} />
+                <span className="font-medium">Dashboard</span>
+              </Link>
+
+              <Link
+                to="/candidates"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-[color-mix(in_oklch,var(--primary)_12%,var(--background))] transition-colors mb-2"
+                activeProps={{
+                  className:
+                    "flex items-center gap-3 p-3 rounded-lg bg-primary text-primary-foreground transition-colors mb-2",
+                }}
+              >
+                <Users size={20} />
+                <span className="font-medium">Candidates</span>
+              </Link>
+            </>
           )}
         </nav>
       </aside>

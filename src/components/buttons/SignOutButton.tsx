@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 
 import { Button } from '@/components/ui/button';
+import { BACKEND_URL } from '@/lib/config';
 
 type SignOutButtonProps = {
   onSignedOut?: () => Promise<void> | void;
@@ -22,7 +23,7 @@ export default function SignOutButton({
       if (onSignedOut) {
         await onSignedOut();
       } else {
-        await fetch('http://localhost:8000/auth/logout', {
+        await fetch(`${BACKEND_URL}/auth/logout`, {
           method: 'POST',
           credentials: 'include',
         });

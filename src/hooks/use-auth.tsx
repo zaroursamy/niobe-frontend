@@ -8,7 +8,7 @@ import {
 } from "react";
 import type { ReactNode } from "react";
 
-import { API_BASE_URL, checkAuth, clearAuthCache } from "@/lib/auth";
+import { BACKEND_URL, checkAuth, clearAuthCache } from "@/lib/auth";
 
 type AuthContextValue = {
   user: any;
@@ -41,7 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(async () => {
     try {
-      await fetch(`${API_BASE_URL}/auth/logout`, {
+      await fetch(`${BACKEND_URL}/auth/logout`, {
         method: "POST",
         credentials: "include",
       });

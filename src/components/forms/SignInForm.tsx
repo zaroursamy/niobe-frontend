@@ -15,9 +15,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 import { useAuth } from "@/hooks/use-auth";
+import { BACKEND_URL } from "@/lib/config";
 
 const formSchema = z.object({
-  email: z.string().trim().email("Enter a valid email."),
+  email: z.email("Enter a valid email."),
   password: z.string().min(8, "Password must be at least 8 characters."),
 });
 
@@ -49,7 +50,7 @@ export default function SignInForm() {
       setStatus({});
 
       try {
-        const response = await fetch("http://localhost:8000/auth/login", {
+        const response = await fetch(`${BACKEND_URL}/auth/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -19,6 +19,7 @@ import {
   InputGroupInput,
   InputGroupText,
 } from "@/components/ui/input-group";
+import { BACKEND_URL } from "@/lib/config";
 
 const formSchema = z.object({
   email: z.string().trim().email("Enter a valid email."),
@@ -49,7 +50,7 @@ export default function SignUpForm() {
       setStatus({});
 
       try {
-        const response = await fetch("http://localhost:8000/auth/register", {
+        const response = await fetch(`${BACKEND_URL}/auth/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
