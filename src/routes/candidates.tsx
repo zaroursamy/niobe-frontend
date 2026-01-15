@@ -4,6 +4,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 
 import CreateCandidateButton from "@/components/buttons/CreateCandidateButton";
+import CandidateList, {
+  type Candidate,
+} from "@/components/candidates/CandidateList";
 import CandidateForm from "@/components/forms/CandidateForm";
 import {
   Dialog,
@@ -13,25 +16,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import type { AuthUser } from "@/lib/auth";
+import { fetchWithRefresh, type AuthUser } from "@/lib/auth";
 import { BACKEND_URL } from "@/lib/config";
 import { requireAuth } from "@/lib/middleware/auth";
-
-type Candidate = {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  website: string;
-  company?: {
-    name?: string;
-  };
-};
 
 type CandidatesContext = { user: AuthUser };
 
 async function fetchCandidates(): Promise<Candidate[]> {
-  const response = await fetch(`${BACKEND_URL}/candidates`);
+  const response = await fetchWithRefresh(`${BACKEND_URL}/candidates`);
+
+  console.log("Fetched candidates", response);
 
   if (!response.ok) {
     throw new Error("Failed to fetch candidates");
@@ -84,7 +78,8 @@ function CandidatesPage() {
               <DialogHeader>
                 <DialogTitle>Create candidate</DialogTitle>
                 <DialogDescription>
-                  Add a candidate to your pipeline. This form is local only for now.
+                  Add a candidate to your pipeline. This form is local only for
+                  now.
                 </DialogDescription>
               </DialogHeader>
 
@@ -111,50 +106,7 @@ function CandidatesPage() {
             onRetry={() => refetch()}
           />
         ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {data.map((candidate) => (
-              <article
-                key={candidate.id}
-                className="rounded-xl border border-border bg-card/40 p-6 shadow-sm backdrop-blur-sm transition hover:border-primary"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="space-y-1">
-                    <h2 className="text-xl font-semibold">{candidate.name}</h2>
-                    <p className="text-sm text-muted-foreground">
-                      {candidate.email}
-                    </p>
-                  </div>
-                  <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                    #{candidate.id}
-                  </span>
-                </div>
-
-                <div className="mt-4 space-y-2 text-sm text-muted-foreground">
-                  <p>
-                    Company:{" "}
-                    <span className="text-foreground">
-                      {candidate.company?.name ?? "Unknown"}
-                    </span>
-                  </p>
-                  <p>
-                    Phone:{" "}
-                    <span className="text-foreground">{candidate.phone}</span>
-                  </p>
-                  <p>
-                    Website:{" "}
-                    <a
-                      href={`https://${candidate.website}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-primary underline-offset-4 hover:underline"
-                    >
-                      {candidate.website}
-                    </a>
-                  </p>
-                </div>
-              </article>
-            ))}
-          </div>
+          <CandidateList candidates={data} />
         )}
       </section>
     </main>
