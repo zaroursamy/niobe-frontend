@@ -123,7 +123,7 @@ export default function CandidateForm({
                 />
                 {isInvalid && (
                   <p className="text-sm text-destructive">
-                    {field.state.meta.errors[0]}
+                    {field.state.meta.errors[0]?.message}
                   </p>
                 )}
               </div>
@@ -152,7 +152,7 @@ export default function CandidateForm({
                 />
                 {isInvalid && (
                   <p className="text-sm text-destructive">
-                    {field.state.meta.errors[0]}
+                    {field.state.meta.errors[0]?.message}
                   </p>
                 )}
               </div>
@@ -184,7 +184,7 @@ export default function CandidateForm({
                 />
                 {isInvalid && (
                   <p className="text-sm text-destructive">
-                    {field.state.meta.errors[0]}
+                    {field.state.meta.errors[0]?.message}
                   </p>
                 )}
               </div>

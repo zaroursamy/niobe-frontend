@@ -2,11 +2,18 @@ import CandidateCardList from "./CandidateCardList";
 
 export type Candidate = {
   id: string;
-  name: string;
-  email: string;
-  phone: string;
-  title: string;
-  source: string;
+  user_id: number;
+  first_name: string;
+  last_name: string;
+  email: string | null;
+  phone: string | null;
+  title: string | null;
+  experience_years: number | null;
+  notes: string | null;
+  status: string;
+  source: string | null;
+  created_at: string;
+  updated_at: string;
 };
 
 type CandidateListProps = {
