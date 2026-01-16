@@ -3,6 +3,7 @@ import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -12,7 +13,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
+import type { Candidate } from "@/components/candidates/CandidateList";
+import { fetchWithRefresh } from "@/lib/auth";
 import { BACKEND_URL } from "@/lib/config";
 
 const formSchema = z.object({
@@ -26,34 +28,39 @@ const formSchema = z.object({
   source: z.enum(["linkedin", "email", "cooptation", "other"]),
 });
 
-export type CreateCandidateFormValues = z.infer<typeof formSchema>;
+export type EditCandidateFormValues = z.infer<typeof formSchema>;
 
-type CreateCandidateFormProps = {
-  onSuccess?: (created?: unknown) => void;
+type EditCandidateFormProps = {
+  candidate: Candidate;
+  onSuccess?: (updated?: unknown) => void;
   onCancel?: () => void;
 };
 
-export default function CreateCandidateForm({
+export default function EditCandidateForm({
+  candidate,
   onSuccess,
   onCancel,
-}: CreateCandidateFormProps) {
+}: EditCandidateFormProps) {
   const [error, setError] = useState<string | null>(null);
 
   const form = useForm({
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      title: "",
-      experience: "",
-      notes: "",
-      source: "linkedin",
+      firstName: candidate.first_name,
+      lastName: candidate.last_name,
+      email: candidate.email ?? "",
+      phone: candidate.phone ?? "",
+      title: candidate.title ?? "",
+      experience:
+        candidate.experience_years != null
+          ? String(candidate.experience_years)
+          : "",
+      notes: candidate.notes ?? "",
+      source: candidate.source ?? "other",
     },
     validators: {
       onSubmit: formSchema,
     },
-    onSubmit: async ({ value, formApi }) => {
+    onSubmit: async ({ value }) => {
       setError(null);
 
       try {
@@ -68,26 +75,27 @@ export default function CreateCandidateForm({
           source: value.source,
         };
 
-        const response = await fetch(`${BACKEND_URL}/candidates`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+        const response = await fetchWithRefresh(
+          `${BACKEND_URL}/candidates/${candidate.id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
           },
-          credentials: "include",
-          body: JSON.stringify(payload),
-        });
+        );
 
         if (!response.ok) {
           const message = await response.text();
-          throw new Error(message || "Failed to create candidate");
+          throw new Error(message || "Failed to update candidate");
         }
 
-        const created = await response.json().catch(() => undefined);
-        formApi.reset();
-        onSuccess?.(created);
+        const updated = await response.json().catch(() => undefined);
+        onSuccess?.(updated);
       } catch (err) {
         const message =
-          err instanceof Error ? err.message : "Failed to create candidate";
+          err instanceof Error ? err.message : "Failed to update candidate";
         setError(message);
       }
     },
@@ -276,7 +284,7 @@ export default function CreateCandidateForm({
             <Select
               value={field.state.value}
               onValueChange={(value) =>
-                field.handleChange(value as CreateCandidateFormValues["source"])
+                field.handleChange(value as EditCandidateFormValues["source"])
               }
             >
               <SelectTrigger className="w-full" id={field.name}>
@@ -306,7 +314,7 @@ export default function CreateCandidateForm({
         <form.Subscribe selector={(state) => state.isSubmitting}>
           {(isSubmitting) => (
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "Creating..." : "Create candidate"}
+              {isSubmitting ? "Saving..." : "Save changes"}
             </Button>
           )}
         </form.Subscribe>

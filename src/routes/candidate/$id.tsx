@@ -1,8 +1,19 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 
+import EditCandidateButton from "@/components/buttons/EditCandidateButton";
 import CandidateProfile from "@/components/candidates/CandidateProfile";
 import type { Candidate } from "@/components/candidates/CandidateList";
+import EditCandidateForm from "@/components/forms/EditCandidateForm";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { fetchWithRefresh, type AuthUser } from "@/lib/auth";
 import { BACKEND_URL } from "@/lib/config";
 import { requireAuth } from "@/lib/middleware/auth";
@@ -29,6 +40,7 @@ export const Route = createFileRoute("/candidate/$id")({
 
 function CandidateDetailPage() {
   const { id } = Route.useParams();
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["candidate", id],
     queryFn: () => fetchCandidate(id),
@@ -44,12 +56,40 @@ function CandidateDetailPage() {
             </p>
             <h1 className="text-4xl font-bold">Profile</h1>
           </div>
-          <Link
-            to="/candidates"
-            className="inline-flex items-center rounded-lg border border-border px-4 py-2 text-sm font-semibold text-foreground transition hover:border-primary"
-          >
-            Back to candidates
-          </Link>
+          <div className="flex items-center gap-3">
+            <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+              <DialogTrigger asChild>
+                <EditCandidateButton
+                  className="shadow-sm hover:brightness-110"
+                  disabled={!data}
+                />
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-xl">
+                <DialogHeader>
+                  <DialogTitle>Edit candidate</DialogTitle>
+                  <DialogDescription>
+                    Update the candidate details and save your changes.
+                  </DialogDescription>
+                </DialogHeader>
+                {data ? (
+                  <EditCandidateForm
+                    candidate={data}
+                    onCancel={() => setIsEditOpen(false)}
+                    onSuccess={() => {
+                      setIsEditOpen(false);
+                      void refetch();
+                    }}
+                  />
+                ) : null}
+              </DialogContent>
+            </Dialog>
+            <Link
+              to="/candidates"
+              className="inline-flex items-center rounded-lg border border-border px-4 py-2 text-sm font-semibold text-foreground transition hover:border-primary"
+            >
+              Back to candidates
+            </Link>
+          </div>
         </div>
 
         {isLoading ? (

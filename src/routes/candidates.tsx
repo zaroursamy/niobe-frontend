@@ -7,7 +7,7 @@ import CreateCandidateButton from "@/components/buttons/CreateCandidateButton";
 import CandidateList, {
   type Candidate,
 } from "@/components/candidates/CandidateList";
-import CandidateForm from "@/components/forms/CandidateForm";
+import CreateCandidateForm from "@/components/forms/CandidateForm";
 import {
   Dialog,
   DialogContent,
@@ -83,7 +83,7 @@ function CandidatesPage() {
                 </DialogDescription>
               </DialogHeader>
 
-              <CandidateForm
+              <CreateCandidateForm
                 onSuccess={() => {
                   setIsCreateOpen(false);
                   void refetch();

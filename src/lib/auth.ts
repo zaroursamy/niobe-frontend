@@ -18,9 +18,8 @@ async function buildRequestInit(init: RequestInit = {}) {
     if (cookieHeader) headers.set("cookie", cookieHeader);
   }
 
-  console.log("Init credentials", init.credentials);
   const credentials = init.credentials ?? defaultCredentials;
-  console.log("credentials", defaultCredentials);
+
   return {
     ...init,
     headers,
@@ -51,7 +50,9 @@ export function clearAuthCache() {
   authRequest = null;
 }
 
-export async function checkAuth(options: { useCache?: boolean } = {}): Promise<AuthUser> {
+export async function checkAuth(
+  options: { useCache?: boolean } = {},
+): Promise<AuthUser> {
   const useCache = options.useCache ?? true;
 
   if (useCache && authRequest) {

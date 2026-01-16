@@ -35,7 +35,14 @@ export default function CandidateProfile({ candidate }: CandidateProfileProps) {
         </p>
       </div>
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2">
+      <div className="mt-6 rounded-xl border border-border/60 bg-background/60 p-4">
+        <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+          Notes
+        </p>
+        <p className="mt-2 text-sm text-foreground">{notes}</p>
+      </div>
+
+      <div className="mt-4 grid gap-4 sm:grid-cols-2">
         <div className="rounded-xl border border-border/60 bg-background/60 p-4">
           <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
             Contact
@@ -60,27 +67,7 @@ export default function CandidateProfile({ candidate }: CandidateProfileProps) {
           </div>
         </div>
 
-        <div className="rounded-xl border border-border/60 bg-background/60 p-4">
-          <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            Identity
-          </p>
-          <div className="mt-2 space-y-2 text-sm text-muted-foreground">
-            <p>
-              First name:{" "}
-              <span className="text-foreground">{candidate.first_name}</span>
-            </p>
-            <p>
-              Last name:{" "}
-              <span className="text-foreground">{candidate.last_name}</span>
-            </p>
-            <p>
-              User ID:{" "}
-              <span className="text-foreground">{candidate.user_id}</span>
-            </p>
-          </div>
-        </div>
-
-        <div className="rounded-xl border border-border/60 bg-background/60 p-4">
+        <div className="rounded-xl border border-border/60 bg-background/60 p-4 sm:col-span-2">
           <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
             Record
           </p>
@@ -102,13 +89,6 @@ export default function CandidateProfile({ candidate }: CandidateProfileProps) {
               </span>
             </p>
           </div>
-        </div>
-
-        <div className="rounded-xl border border-border/60 bg-background/60 p-4 sm:col-span-2">
-          <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            Notes
-          </p>
-          <p className="mt-2 text-sm text-foreground">{notes}</p>
         </div>
       </div>
     </section>
