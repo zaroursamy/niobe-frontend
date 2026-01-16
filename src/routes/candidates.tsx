@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
@@ -102,6 +102,7 @@ function CandidatesPage() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const navigate = useNavigate({ from: Route.fullPath });
   const search = Route.useSearch() as CandidatesSearch;
+  const [searchText, setSearchText] = useState(search.q ?? "");
 
   const { data, refetch } = useSuspenseQuery(candidatesQueryOptions(search));
 
@@ -114,6 +115,9 @@ function CandidatesPage() {
       replace: true,
     });
   };
+  useEffect(() => {
+    setSearchText(search.q ?? "");
+  }, [search.q]);
   const formatDate = (date: Date) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -171,13 +175,19 @@ function CandidatesPage() {
                 <Label htmlFor="candidate-search">Search</Label>
                 <Input
                   id="candidate-search"
-                  placeholder="Search across all candidate fields..."
-                  value={search.q ?? ""}
-                  onChange={(event) => updateSearch("q", event.target.value)}
+                  placeholder="Search and press Enter"
+                  value={searchText}
+                  onChange={(event) => setSearchText(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                      event.preventDefault();
+                      updateSearch("q", searchText);
+                    }
+                  }}
                 />
               </div>
               <p className="text-sm text-muted-foreground">
-                Showing {data.length} candidates
+                Found {data.length} candidate(s)
               </p>
             </div>
 

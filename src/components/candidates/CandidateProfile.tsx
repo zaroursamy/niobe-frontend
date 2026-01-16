@@ -69,13 +69,9 @@ export default function CandidateProfile({ candidate }: CandidateProfileProps) {
 
         <div className="rounded-xl border border-border/60 bg-background/60 p-4 sm:col-span-2">
           <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            Record
+            MODIFICATIONS
           </p>
           <div className="mt-2 space-y-2 text-sm text-muted-foreground">
-            <p>
-              Candidate ID:{" "}
-              <span className="text-foreground">{candidate.id}</span>
-            </p>
             <p>
               Created:{" "}
               <span className="text-foreground">
