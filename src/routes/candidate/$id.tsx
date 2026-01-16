@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 
 import EditCandidateButton from "@/components/buttons/EditCandidateButton";
@@ -30,21 +30,26 @@ async function fetchCandidate(id: string): Promise<Candidate> {
   return response.json();
 }
 
+const candidateQueryOptions = (id: string) =>
+  queryOptions({
+    queryKey: ["candidate", id],
+    queryFn: () => fetchCandidate(id),
+  });
+
 export const Route = createFileRoute("/candidate/$id")({
   beforeLoad: async ({ location }) => {
     const { user } = await requireAuth({ location });
     return { user } satisfies CandidateDetailContext;
   },
+  loader: ({ context, params }) =>
+    context.queryClient.ensureQueryData(candidateQueryOptions(params.id)),
   component: CandidateDetailPage,
 });
 
 function CandidateDetailPage() {
   const { id } = Route.useParams();
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ["candidate", id],
-    queryFn: () => fetchCandidate(id),
-  });
+  const { data, refetch } = useSuspenseQuery(candidateQueryOptions(id));
 
   return (
     <main className="min-h-screen bg-linear-to-b from-background via-accent/10 to-background text-foreground px-6 py-16">
@@ -92,33 +97,7 @@ function CandidateDetailPage() {
           </div>
         </div>
 
-        {isLoading ? (
-          <div className="rounded-2xl border border-border bg-card/40 p-8 shadow-sm animate-pulse">
-            <div className="h-6 w-1/3 rounded bg-foreground/10" />
-            <div className="mt-2 h-4 w-1/4 rounded bg-foreground/10" />
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              <div className="h-24 rounded-xl bg-foreground/10" />
-              <div className="h-24 rounded-xl bg-foreground/10" />
-            </div>
-          </div>
-        ) : isError ? (
-          <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-6 text-destructive">
-            <p className="font-semibold">Failed to load candidate</p>
-            <p className="text-sm mt-1">
-              {error instanceof Error
-                ? error.message
-                : "Error loading candidate"}
-            </p>
-            <button
-              onClick={() => refetch()}
-              className="mt-4 inline-flex items-center rounded-lg bg-destructive px-4 py-2 text-sm font-semibold text-destructive-foreground shadow-sm transition hover:brightness-110"
-            >
-              Try again
-            </button>
-          </div>
-        ) : data ? (
-          <CandidateProfile candidate={data} />
-        ) : null}
+        <CandidateProfile candidate={data} />
       </section>
     </main>
   );
