@@ -3,8 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { fetchWithRefresh } from "@/lib/auth";
-import { BACKEND_URL } from "@/lib/config";
+import { uploadCandidateCv } from "@/data/candidates";
 
 type AttachCVFormProps = {
   candidateId: string;
@@ -31,23 +30,7 @@ export default function AttachCVForm({
     setIsSubmitting(true);
 
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const response = await fetchWithRefresh(
-        `${BACKEND_URL}/candidates/${candidateId}/cvs`,
-        {
-          method: "POST",
-          body: formData,
-        },
-      );
-
-      if (!response.ok) {
-        const message = await response.text();
-        throw new Error(message || "Failed to upload CV");
-      }
-
-      const payload = await response.json().catch(() => undefined);
+      const payload = await uploadCandidateCv(candidateId, file);
       setFile(null);
       onSuccess?.(payload);
     } catch (err) {

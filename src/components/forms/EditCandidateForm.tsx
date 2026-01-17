@@ -14,8 +14,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { Candidate } from "@/components/candidates/CandidateList";
-import { fetchWithRefresh } from "@/lib/auth";
-import { BACKEND_URL } from "@/lib/config";
+import { updateCandidate } from "@/data/candidates";
 
 const formSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -75,23 +74,7 @@ export default function EditCandidateForm({
           source: value.source,
         };
 
-        const response = await fetchWithRefresh(
-          `${BACKEND_URL}/candidates/${candidate.id}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(payload),
-          },
-        );
-
-        if (!response.ok) {
-          const message = await response.text();
-          throw new Error(message || "Failed to update candidate");
-        }
-
-        const updated = await response.json().catch(() => undefined);
+        const updated = await updateCandidate(candidate.id, payload);
         onSuccess?.(updated);
       } catch (err) {
         const message =

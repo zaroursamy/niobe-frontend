@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
+import { toast } from "sonner";
 
 import EditCandidateButton from "@/components/buttons/EditCandidateButton";
 import CandidateCvActions from "@/components/candidates/CandidateCvActions";
 import CandidateProfile from "@/components/candidates/CandidateProfile";
-import type { Candidate } from "@/components/candidates/CandidateList";
 import EditCandidateForm from "@/components/forms/EditCandidateForm";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -15,26 +16,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { fetchWithRefresh, type AuthUser } from "@/lib/auth";
-import { BACKEND_URL } from "@/lib/config";
+import type { AuthUser } from "@/lib/auth";
 import { requireAuth } from "@/lib/middleware/auth";
+import { deleteCandidate, getCandidate } from "@/data/candidates";
 
 type CandidateDetailContext = { user: AuthUser };
-
-async function fetchCandidate(id: string): Promise<Candidate> {
-  const response = await fetchWithRefresh(`${BACKEND_URL}/candidates/${id}`);
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch candidate");
-  }
-
-  return response.json();
-}
 
 const candidateQueryOptions = (id: string) =>
   queryOptions({
     queryKey: ["candidate", id],
-    queryFn: () => fetchCandidate(id),
+    queryFn: () => getCandidate(id),
   });
 
 export const Route = createFileRoute("/candidate/$id")({
@@ -50,7 +41,24 @@ export const Route = createFileRoute("/candidate/$id")({
 function CandidateDetailPage() {
   const { id } = Route.useParams();
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const navigate = useNavigate({ from: Route.fullPath });
   const { data, refetch } = useSuspenseQuery(candidateQueryOptions(id));
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await deleteCandidate(id);
+      toast.success("Candidate deleted");
+      await navigate({ to: "/candidates" });
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to delete candidate";
+      toast.error(message);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   return (
     <main className="min-h-screen bg-linear-to-b from-background via-accent/10 to-background text-foreground px-6 py-16">
@@ -90,6 +98,14 @@ function CandidateDetailPage() {
               </DialogContent>
             </Dialog>
             <CandidateCvActions candidateId={id} disabled={!data} />
+            <Button
+              type="button"
+              variant="destructive"
+              disabled={isDeleting}
+              onClick={handleDelete}
+            >
+              {isDeleting ? "Deleting..." : "Delete"}
+            </Button>
             <Link
               to="/candidates"
               className="inline-flex items-center rounded-lg border border-border px-4 py-2 text-sm font-semibold text-foreground transition hover:border-primary"

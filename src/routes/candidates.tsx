@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { z } from "zod";
 import { Calendar as CalendarIcon } from "lucide-react";
 
 import CreateCandidateButton from "@/components/buttons/CreateCandidateButton";
@@ -35,53 +34,20 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { fetchWithRefresh, type AuthUser } from "@/lib/auth";
-import { BACKEND_URL } from "@/lib/config";
+import type { AuthUser } from "@/lib/auth";
 import { requireAuth } from "@/lib/middleware/auth";
+import {
+  candidatesSearchSchema,
+  getCandidates,
+  type CandidatesSearch,
+} from "@/data/candidates";
 
 type CandidatesContext = { user: AuthUser };
-
-const searchSchema = z.object({
-  q: z.string().optional(),
-  id: z.string().optional(),
-  user_id: z.string().optional(),
-  first_name: z.string().optional(),
-  last_name: z.string().optional(),
-  email: z.string().optional(),
-  phone: z.string().optional(),
-  title: z.string().optional(),
-  experience_years: z.preprocess((value) => {
-    if (value === "" || value == null) return undefined;
-    return Number(value);
-  }, z.number().int().nonnegative().optional()),
-  notes: z.string().optional(),
-  status: z.string().optional(),
-  source: z.string().optional(),
-  created_at: z.string().optional(),
-  updated_at: z.string().optional(),
-});
-type CandidatesSearch = z.infer<typeof searchSchema>;
 
 const candidatesQueryOptions = (search: CandidatesSearch = {}) =>
   queryOptions({
     queryKey: ["candidates", search],
-    queryFn: async (): Promise<Candidate[]> => {
-      const params = new URLSearchParams();
-      Object.entries(search).forEach(([key, value]) => {
-        if (value === undefined || value === null || value === "") return;
-        params.set(key, String(value));
-      });
-      const query = params.toString();
-      const response = await fetchWithRefresh(
-        `${BACKEND_URL}/candidates${query ? `?${query}` : ""}`,
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch candidates");
-      }
-
-      return response.json();
-    },
+    queryFn: () => getCandidates(search),
   });
 
 export const Route = createFileRoute("/candidates")({
@@ -89,7 +55,8 @@ export const Route = createFileRoute("/candidates")({
     const { user } = await requireAuth({ location });
     return { user } satisfies CandidatesContext;
   },
-  validateSearch: (search): CandidatesSearch => searchSchema.parse(search),
+  validateSearch: (search): CandidatesSearch =>
+    candidatesSearchSchema.parse(search),
   loaderDeps: ({ search }) => search,
   loader: ({ context, deps }) =>
     context.queryClient.ensureQueryData(candidatesQueryOptions(deps)),

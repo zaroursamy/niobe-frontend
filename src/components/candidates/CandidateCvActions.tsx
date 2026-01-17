@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import CandidateCvPreviewDialog from './CandidateCvPreviewDialog';
+import CandidateCvParsedDialog from './CandidateCvParsedDialog';
 
 type CandidateCvActionsProps = {
   candidateId: string;
@@ -28,6 +29,7 @@ export default function CandidateCvActions({
 }: CandidateCvActionsProps) {
   const [isAttachOpen, setIsAttachOpen] = useState(false);
   const [isCvOpen, setIsCvOpen] = useState(false);
+  const [isParsedOpen, setIsParsedOpen] = useState(false);
 
   return (
     <>
@@ -41,6 +43,9 @@ export default function CandidateCvActions({
         <DropdownMenuContent align="end">
           <DropdownMenuItem onSelect={() => setIsCvOpen(true)}>
             See CV
+          </DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => setIsParsedOpen(true)}>
+            See parsed CV
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => setIsAttachOpen(true)}>
             Upload CV
@@ -68,6 +73,11 @@ export default function CandidateCvActions({
         candidateId={candidateId}
         open={isCvOpen}
         onOpenChange={setIsCvOpen}
+      />
+      <CandidateCvParsedDialog
+        candidateId={candidateId}
+        open={isParsedOpen}
+        onOpenChange={setIsParsedOpen}
       />
     </>
   );
