@@ -26,10 +26,9 @@ export default function CandidateProfile({ candidate }: CandidateProfileProps) {
     <section className="rounded-2xl border border-border bg-card/60 p-8 shadow-sm">
       <div className="space-y-2">
         <p className="text-sm uppercase tracking-[0.2em] text-primary">
-          Candidate profile
+          {title}
         </p>
         <h1 className="text-3xl font-semibold">{fullName}</h1>
-        <p className="text-muted-foreground">{title}</p>
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">
           Status: <span className="text-foreground">{candidate.status}</span>
         </p>

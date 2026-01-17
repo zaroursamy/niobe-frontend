@@ -29,6 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 import {
   Popover,
   PopoverContent,
@@ -49,7 +50,10 @@ const searchSchema = z.object({
   email: z.string().optional(),
   phone: z.string().optional(),
   title: z.string().optional(),
-  experience_years: z.string().optional(),
+  experience_years: z.preprocess((value) => {
+    if (value === "" || value == null) return undefined;
+    return Number(value);
+  }, z.number().int().nonnegative().optional()),
   notes: z.string().optional(),
   status: z.string().optional(),
   source: z.string().optional(),
@@ -64,14 +68,8 @@ const candidatesQueryOptions = (search: CandidatesSearch = {}) =>
     queryFn: async (): Promise<Candidate[]> => {
       const params = new URLSearchParams();
       Object.entries(search).forEach(([key, value]) => {
-        if (!value) return;
-        if (key === "experience_years") {
-          const parsed = Number(value);
-          if (Number.isNaN(parsed)) return;
-          params.set(key, String(parsed));
-          return;
-        }
-        params.set(key, value);
+        if (value === undefined || value === null || value === "") return;
+        params.set(key, String(value));
       });
       const query = params.toString();
       const response = await fetchWithRefresh(
@@ -106,11 +104,16 @@ function CandidatesPage() {
 
   const { data, refetch } = useSuspenseQuery(candidatesQueryOptions(search));
 
-  const updateSearch = (key: keyof CandidatesSearch, value: string) => {
+  const updateSearch = (
+    key: keyof CandidatesSearch,
+    value: string | number | undefined,
+  ) => {
+    const nextValue =
+      typeof value === "string" ? (value.trim() ? value : undefined) : value;
     void navigate({
       search: (prev) => ({
         ...prev,
-        [key]: value.trim() ? value : undefined,
+        [key]: nextValue,
       }),
       replace: true,
     });
@@ -136,11 +139,11 @@ function CandidatesPage() {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="space-y-2">
             <p className="text-sm uppercase tracking-[0.2em] text-primary">
-              Pipeline
+              CANDIDATES
             </p>
-            <h1 className="text-4xl font-bold">Candidates</h1>
+            <h1 className="text-4xl font-bold">Overview</h1>
             <p className="text-muted-foreground">
-              Data loaded from the backend candidates endpoint.
+              Find your candidates and open their profiles.
             </p>
           </div>
 
@@ -152,8 +155,7 @@ function CandidatesPage() {
               <DialogHeader>
                 <DialogTitle>Create candidate</DialogTitle>
                 <DialogDescription>
-                  Add a candidate to your pipeline. This form is local only for
-                  now.
+                  Add a new candidate to your database.
                 </DialogDescription>
               </DialogHeader>
 
@@ -172,7 +174,9 @@ function CandidatesPage() {
           <div className="space-y-6">
             <div className="rounded-2xl border border-border bg-card/40 p-6 shadow-sm space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="candidate-search">Search</Label>
+                <Label htmlFor="candidate-search">
+                  Search on notes, name, email ...
+                </Label>
                 <Input
                   id="candidate-search"
                   placeholder="Search and press Enter"
@@ -187,7 +191,7 @@ function CandidatesPage() {
                 />
               </div>
               <p className="text-sm text-muted-foreground">
-                Found {data.length} candidate(s)
+                {data.length} candidate(s)
               </p>
             </div>
 
@@ -215,16 +219,24 @@ function CandidatesPage() {
             </div>
             <div className="space-y-3">
               <div className="space-y-2">
-                <Label htmlFor="candidate-experience">Experience (years)</Label>
-                <Input
-                  id="candidate-experience"
-                  type="number"
-                  min="0"
-                  value={search.experience_years ?? ""}
-                  onChange={(event) =>
-                    updateSearch("experience_years", event.target.value)
-                  }
-                />
+                <Label htmlFor="candidate-experience">Experience min</Label>
+                <div className="space-y-3">
+                  <Slider
+                    id="candidate-experience"
+                    min={0}
+                    max={40}
+                    step={1}
+                    value={[search.experience_years ?? 0]}
+                    onValueChange={(value) =>
+                      updateSearch("experience_years", value[0])
+                    }
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    {search.experience_years != null
+                      ? `${search.experience_years} years`
+                      : "Any"}
+                  </p>
+                </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="candidate-status">Status</Label>
