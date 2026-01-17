@@ -17,11 +17,9 @@ type CandidateCvParsedDialogProps = {
 };
 
 type CandidateCvParsedResponse = {
-  candidate_cv_id: string;
-  raw_text?: string | null;
-  structured_data?: {
-    text?: string | null;
-  } | null;
+  filename: string;
+  text?: string | null;
+  ocr_used: boolean;
 };
 
 export default function CandidateCvParsedDialog({
@@ -93,19 +91,31 @@ export default function CandidateCvParsedDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-3xl">
         <DialogHeader>
-          <DialogTitle>Parsed CV</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            Parsed CV
+            {parsedData?.ocr_used ? (
+              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
+                OCR used
+              </span>
+            ) : null}
+          </DialogTitle>
           <DialogDescription>
             Raw text extracted from the latest CV.
           </DialogDescription>
+          {parsedData?.filename ? (
+            <p className="text-xs text-muted-foreground">
+              File: {parsedData.filename}
+            </p>
+          ) : null}
         </DialogHeader>
         <div className="rounded-lg border border-border bg-background p-4">
           {isLoading ? (
             <p className="text-sm text-muted-foreground">Loading parsed CV...</p>
           ) : error ? (
             <p className="text-sm text-destructive">{error}</p>
-          ) : parsedData?.structured_data?.text ? (
+          ) : parsedData?.text ? (
             <pre className="max-h-[60vh] overflow-auto whitespace-pre-wrap text-sm text-foreground">
-              {parsedData.structured_data.text}
+              {parsedData.text}
             </pre>
           ) : (
             <p className="text-sm text-muted-foreground">

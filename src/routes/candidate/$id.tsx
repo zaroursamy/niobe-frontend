@@ -1,24 +1,13 @@
-import { useState } from "react";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { toast } from "sonner";
+import { Link, createFileRoute } from "@tanstack/react-router";
 
-import EditCandidateButton from "@/components/buttons/EditCandidateButton";
+import CandidateDeleteButton from "@/components/candidates/CandidateDeleteButton";
 import CandidateCvActions from "@/components/candidates/CandidateCvActions";
+import CandidateEditDialog from "@/components/candidates/CandidateEditDialog";
 import CandidateProfile from "@/components/candidates/CandidateProfile";
-import EditCandidateForm from "@/components/forms/EditCandidateForm";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import type { AuthUser } from "@/lib/auth";
 import { requireAuth } from "@/lib/middleware/auth";
-import { deleteCandidate, getCandidate } from "@/data/candidates";
+import { getCandidate } from "@/data/candidates";
 
 type CandidateDetailContext = { user: AuthUser };
 
@@ -40,25 +29,7 @@ export const Route = createFileRoute("/candidate/$id")({
 
 function CandidateDetailPage() {
   const { id } = Route.useParams();
-  const [isEditOpen, setIsEditOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const navigate = useNavigate({ from: Route.fullPath });
   const { data, refetch } = useSuspenseQuery(candidateQueryOptions(id));
-
-  const handleDelete = async () => {
-    setIsDeleting(true);
-    try {
-      await deleteCandidate(id);
-      toast.success("Candidate deleted");
-      await navigate({ to: "/candidates" });
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to delete candidate";
-      toast.error(message);
-    } finally {
-      setIsDeleting(false);
-    }
-  };
 
   return (
     <main className="min-h-screen bg-linear-to-b from-background via-accent/10 to-background text-foreground px-6 py-16">
@@ -71,41 +42,16 @@ function CandidateDetailPage() {
             <h1 className="text-4xl font-bold">Profile</h1>
           </div>
           <div className="flex items-center gap-3">
-            <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-              <DialogTrigger asChild>
-                <EditCandidateButton
-                  className="shadow-sm hover:brightness-110"
-                  disabled={!data}
-                />
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-xl">
-                <DialogHeader>
-                  <DialogTitle>Edit candidate</DialogTitle>
-                  <DialogDescription>
-                    Update the candidate details and save your changes.
-                  </DialogDescription>
-                </DialogHeader>
-                {data ? (
-                  <EditCandidateForm
-                    candidate={data}
-                    onCancel={() => setIsEditOpen(false)}
-                    onSuccess={() => {
-                      setIsEditOpen(false);
-                      void refetch();
-                    }}
-                  />
-                ) : null}
-              </DialogContent>
-            </Dialog>
+            {data ? (
+              <CandidateEditDialog
+                candidate={data}
+                onUpdated={() => {
+                  void refetch();
+                }}
+              />
+            ) : null}
             <CandidateCvActions candidateId={id} disabled={!data} />
-            <Button
-              type="button"
-              variant="destructive"
-              disabled={isDeleting}
-              onClick={handleDelete}
-            >
-              {isDeleting ? "Deleting..." : "Delete"}
-            </Button>
+            <CandidateDeleteButton candidateId={id} disabled={!data} />
             <Link
               to="/candidates"
               className="inline-flex items-center rounded-lg border border-border px-4 py-2 text-sm font-semibold text-foreground transition hover:border-primary"
