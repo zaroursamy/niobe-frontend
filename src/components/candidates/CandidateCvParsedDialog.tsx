@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import SmallBadge from '@/components/candidates/SmallBadge';
 import { fetchWithRefresh } from '@/lib/auth';
 import { BACKEND_URL } from '@/lib/config';
 
@@ -18,6 +19,7 @@ type CandidateCvParsedDialogProps = {
 
 type CandidateCvParsedResponse = {
   filename: string;
+  lang?: string | null;
   text?: string | null;
   llm?: unknown;
   ocr_used: boolean;
@@ -94,10 +96,15 @@ export default function CandidateCvParsedDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             Parsed CV
-            {parsedData?.ocr_used ? (
-              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
-                OCR used
-              </span>
+            {parsedData ? (
+              <>
+                <SmallBadge>
+                  {parsedData.ocr_used ? 'OCR used' : 'OCR unused'}
+                </SmallBadge>
+                {parsedData.lang ? (
+                  <SmallBadge>Lang: {parsedData.lang}</SmallBadge>
+                ) : null}
+              </>
             ) : null}
           </DialogTitle>
           <DialogDescription>

@@ -1,4 +1,5 @@
-import type { MouseEvent } from 'react';
+import type { MouseEvent } from "react";
+import SmallBadge from "./SmallBadge";
 
 type CandidateEmailBadgeProps = {
   email: string | null;
@@ -10,14 +11,14 @@ export default function CandidateEmailBadge({
   onClick,
 }: CandidateEmailBadgeProps) {
   return (
-    <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+    <SmallBadge>
       {email ? (
         <a href={`mailto:${email}`} onClick={onClick}>
           {email}
         </a>
       ) : (
-        'No email'
+        "No email"
       )}
-    </span>
+    </SmallBadge>
   );
 }
