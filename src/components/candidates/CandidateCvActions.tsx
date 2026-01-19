@@ -41,13 +41,22 @@ export default function CandidateCvActions({
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onSelect={() => setIsPDFOpen(true)}>
+          <DropdownMenuItem
+            className="hover:cursor-pointer"
+            onSelect={() => setIsPDFOpen(true)}
+          >
             View PDF
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => setIsIAOpen(true)}>
+          <DropdownMenuItem
+            className="hover:cursor-pointer"
+            onSelect={() => setIsIAOpen(true)}
+          >
             View IA
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => setIsUploadOpen(true)}>
+          <DropdownMenuItem
+            className="hover:cursor-pointer"
+            onSelect={() => setIsUploadOpen(true)}
+          >
             Upload
           </DropdownMenuItem>
         </DropdownMenuContent>
