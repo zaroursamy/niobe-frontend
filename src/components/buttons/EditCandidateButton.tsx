@@ -1,18 +1,18 @@
-import type { ComponentProps, ReactNode } from 'react';
+import type { ComponentProps, ReactNode } from "react";
 
-import { Pencil } from 'lucide-react';
+import { Pencil } from "lucide-react";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 
 type EditCandidateButtonProps = Omit<
   ComponentProps<typeof Button>,
-  'children'
+  "children"
 > & {
   label?: ReactNode;
 };
 
 export default function EditCandidateButton({
-  label = 'Edit candidate',
+  label = "Edit info",
   className,
   ...props
 }: EditCandidateButtonProps) {

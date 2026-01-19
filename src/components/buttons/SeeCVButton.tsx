@@ -4,10 +4,7 @@ import { FileSearch } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
-type SeeCVButtonProps = Omit<
-  ComponentProps<typeof Button>,
-  "children"
-> & {
+type SeeCVButtonProps = Omit<ComponentProps<typeof Button>, "children"> & {
   label?: ReactNode;
 };
 

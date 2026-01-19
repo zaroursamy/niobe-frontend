@@ -19,6 +19,7 @@ type CandidateCvParsedDialogProps = {
 type CandidateCvParsedResponse = {
   filename: string;
   text?: string | null;
+  llm?: unknown;
   ocr_used: boolean;
 };
 
@@ -114,9 +115,16 @@ export default function CandidateCvParsedDialog({
           ) : error ? (
             <p className="text-sm text-destructive">{error}</p>
           ) : parsedData?.text ? (
-            <pre className="max-h-[60vh] overflow-auto whitespace-pre-wrap text-sm text-foreground">
-              {parsedData.text}
-            </pre>
+            <div className="max-h-[60vh] overflow-auto">
+              <pre className="whitespace-pre-wrap text-sm text-foreground">
+                {parsedData.text}
+              </pre>
+              {parsedData.llm ? (
+                <pre className="mt-4 whitespace-pre-wrap text-sm text-muted-foreground">
+                  {JSON.stringify(parsedData.llm, null, 2)}
+                </pre>
+              ) : null}
+            </div>
           ) : (
             <p className="text-sm text-muted-foreground">
               No parsed text available.

@@ -1,22 +1,22 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import CVButton from '@/components/buttons/CVButton';
-import AttachCVForm from '@/components/forms/AttachCVForm';
+import CVButton from "@/components/buttons/CVButton";
+import AttachCVForm from "@/components/forms/AttachCVForm";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import CandidateCvPreviewDialog from './CandidateCvPreviewDialog';
-import CandidateCvParsedDialog from './CandidateCvParsedDialog';
+} from "@/components/ui/dropdown-menu";
+import CandidateCvPreviewDialog from "./CandidateCvPreviewDialog";
+import CandidateCvParsedDialog from "./CandidateCvParsedDialog";
 
 type CandidateCvActionsProps = {
   candidateId: string;
@@ -27,9 +27,9 @@ export default function CandidateCvActions({
   candidateId,
   disabled,
 }: CandidateCvActionsProps) {
-  const [isAttachOpen, setIsAttachOpen] = useState(false);
-  const [isCvOpen, setIsCvOpen] = useState(false);
-  const [isParsedOpen, setIsParsedOpen] = useState(false);
+  const [isAttachOpen, setIsUploadOpen] = useState(false);
+  const [isCvOpen, setIsPDFOpen] = useState(false);
+  const [isParsedOpen, setIsIAOpen] = useState(false);
 
   return (
     <>
@@ -41,19 +41,19 @@ export default function CandidateCvActions({
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onSelect={() => setIsCvOpen(true)}>
-            See CV
+          <DropdownMenuItem onSelect={() => setIsPDFOpen(true)}>
+            View PDF
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => setIsParsedOpen(true)}>
-            See parsed CV
+          <DropdownMenuItem onSelect={() => setIsIAOpen(true)}>
+            View IA
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => setIsAttachOpen(true)}>
-            Upload CV
+          <DropdownMenuItem onSelect={() => setIsUploadOpen(true)}>
+            Upload
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <Dialog open={isAttachOpen} onOpenChange={setIsAttachOpen}>
+      <Dialog open={isAttachOpen} onOpenChange={setIsUploadOpen}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>Attach CV</DialogTitle>
@@ -63,8 +63,8 @@ export default function CandidateCvActions({
           </DialogHeader>
           <AttachCVForm
             candidateId={candidateId}
-            onCancel={() => setIsAttachOpen(false)}
-            onSuccess={() => setIsAttachOpen(false)}
+            onCancel={() => setIsUploadOpen(false)}
+            onSuccess={() => setIsUploadOpen(false)}
           />
         </DialogContent>
       </Dialog>
@@ -72,12 +72,12 @@ export default function CandidateCvActions({
       <CandidateCvPreviewDialog
         candidateId={candidateId}
         open={isCvOpen}
-        onOpenChange={setIsCvOpen}
+        onOpenChange={setIsPDFOpen}
       />
       <CandidateCvParsedDialog
         candidateId={candidateId}
         open={isParsedOpen}
-        onOpenChange={setIsParsedOpen}
+        onOpenChange={setIsIAOpen}
       />
     </>
   );
