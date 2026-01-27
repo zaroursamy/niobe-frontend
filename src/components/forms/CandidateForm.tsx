@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "@tanstack/react-form";
 import { z } from "zod";
 
@@ -31,16 +31,17 @@ export type CreateCandidateFormValues = z.infer<typeof formSchema>;
 type CreateCandidateFormProps = {
   onSuccess?: (created?: unknown) => void;
   onCancel?: () => void;
+  initialValues?: Partial<CreateCandidateFormValues>;
 };
 
 export default function CreateCandidateForm({
   onSuccess,
   onCancel,
+  initialValues,
 }: CreateCandidateFormProps) {
   const [error, setError] = useState<string | null>(null);
-
-  const form = useForm({
-    defaultValues: {
+  const defaultValues = useMemo(
+    () => ({
       firstName: "",
       lastName: "",
       email: "",
@@ -49,7 +50,13 @@ export default function CreateCandidateForm({
       experience: "",
       notes: "",
       source: "linkedin",
-    },
+      ...initialValues,
+    }),
+    [initialValues],
+  );
+
+  const form = useForm({
+    defaultValues,
     validators: {
       onSubmit: formSchema,
     },

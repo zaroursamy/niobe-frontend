@@ -26,6 +26,14 @@ export const candidatesSearchSchema = z.object({
 
 export type CandidatesSearch = z.infer<typeof candidatesSearchSchema>;
 
+export type CandidateCvParsedResponse = {
+  filename: string;
+  lang?: string | null;
+  text?: string | null;
+  llm?: unknown;
+  ocr_used: boolean;
+};
+
 export async function getCandidate(id: string): Promise<Candidate> {
   const response = await fetchWithRefresh(`${BACKEND_URL}/candidates/${id}`);
 
@@ -80,16 +88,13 @@ export async function updateCandidate(
     source: string;
   },
 ): Promise<unknown> {
-  const response = await fetchWithRefresh(
-    `${BACKEND_URL}/candidates/${id}`,
-    {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
+  const response = await fetchWithRefresh(`${BACKEND_URL}/candidates/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
+    body: JSON.stringify(payload),
+  });
 
   if (!response.ok) {
     const message = await response.text();
@@ -120,4 +125,24 @@ export async function uploadCandidateCv(
   }
 
   return response.json().catch(() => undefined);
+}
+
+export async function attachCvParsed(
+  candidateId: string,
+  cvId: string,
+  parsed: CandidateCvParsedResponse,
+): Promise<void> {
+  const response = await fetchWithRefresh(
+    `${BACKEND_URL}/candidates/${candidateId}/cvs/${cvId}/parsed`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(parsed),
+    },
+  );
+
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(message || "Failed to attach parsed CV");
+  }
 }

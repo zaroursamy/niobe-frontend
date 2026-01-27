@@ -9,6 +9,7 @@ import CandidateList, {
   type Candidate,
 } from "@/components/candidates/CandidateList";
 import CreateCandidateForm from "@/components/forms/CandidateForm";
+import ImportCandidateFromCvForm from "@/components/forms/ImportCandidateFromCvForm";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -65,6 +66,9 @@ export const Route = createFileRoute("/candidates")({
 
 function CandidatesPage() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [createMode, setCreateMode] = useState<"manual" | "import" | null>(
+    null,
+  );
   const navigate = useNavigate({ from: Route.fullPath });
   const search = Route.useSearch() as CandidatesSearch;
   const [searchText, setSearchText] = useState(search.q ?? "");
@@ -114,25 +118,86 @@ function CandidatesPage() {
             </p>
           </div>
 
-          <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+          <Dialog
+            open={isCreateOpen}
+            onOpenChange={(open) => {
+              setIsCreateOpen(open);
+              if (!open) setCreateMode(null);
+            }}
+          >
             <DialogTrigger asChild>
               <CreateCandidateButton className="shadow-sm hover:brightness-110" />
             </DialogTrigger>
             <DialogContent className="sm:max-w-xl">
               <DialogHeader>
-                <DialogTitle>Create candidate</DialogTitle>
+                <DialogTitle>
+                  {createMode === "import"
+                    ? "Import candidate from PDF"
+                    : "Create candidate"}
+                </DialogTitle>
                 <DialogDescription>
-                  Add a new candidate to your database.
+                  {createMode === "import"
+                    ? "Upload a CV to prefill candidate details."
+                    : "Add a new candidate to your database."}
                 </DialogDescription>
               </DialogHeader>
 
-              <CreateCandidateForm
-                onSuccess={() => {
-                  setIsCreateOpen(false);
-                  void refetch();
-                }}
-                onCancel={() => setIsCreateOpen(false)}
-              />
+              {createMode ? (
+                <div className="space-y-4">
+                  {createMode === "manual" ? (
+                    <>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setCreateMode(null)}
+                      >
+                        Back
+                      </Button>
+                      <CreateCandidateForm
+                        onSuccess={() => {
+                          setIsCreateOpen(false);
+                          setCreateMode(null);
+                          void refetch();
+                        }}
+                        onCancel={() => setIsCreateOpen(false)}
+                      />
+                    </>
+                  ) : (
+                    <ImportCandidateFromCvForm
+                      onBack={() => setCreateMode(null)}
+                      onSuccess={() => {
+                        setIsCreateOpen(false);
+                        setCreateMode(null);
+                        void refetch();
+                      }}
+                      onCancel={() => setIsCreateOpen(false)}
+                    />
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <Button
+                      type="button"
+                      onClick={() => setCreateMode("manual")}
+                    >
+                      Create manually
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setCreateMode("import")}
+                    >
+                      Import from PDF
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Importing lets you prefill fields from the CV and review
+                    them before saving.
+                  </p>
+                </div>
+              )}
             </DialogContent>
           </Dialog>
         </div>
