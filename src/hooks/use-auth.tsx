@@ -8,7 +8,8 @@ import {
 } from "react";
 import type { ReactNode } from "react";
 
-import { BACKEND_URL, checkAuth, clearAuthCache } from "@/lib/auth";
+import { checkAuth, clearAuthCache } from "@/lib/auth";
+import { logout as logoutApi } from "@/data/auth";
 
 type AuthContextValue = {
   user: any;
@@ -41,14 +42,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(async () => {
     try {
-      await fetch(`${BACKEND_URL}/auth/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
+      await logoutApi();
     } catch (error) {
       console.error("Logout failed", error);
     } finally {
-      // Ensure local auth state is cleared so UI (navbar) updates immediately.
       clearAuthCache();
       setUser(null);
     }

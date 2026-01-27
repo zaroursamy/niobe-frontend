@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { BACKEND_URL } from "@/lib/config";
+import { createCandidate } from "@/data/candidates";
 
 const formSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -64,7 +64,7 @@ export default function CreateCandidateForm({
       setError(null);
 
       try {
-        const payload = {
+        const created = await createCandidate({
           firstName: value.firstName,
           lastName: value.lastName,
           email: value.email,
@@ -73,23 +73,7 @@ export default function CreateCandidateForm({
           experience: value.experience ? Number(value.experience) : undefined,
           notes: value.notes,
           source: value.source,
-        };
-
-        const response = await fetch(`${BACKEND_URL}/candidates`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(payload),
         });
-
-        if (!response.ok) {
-          const message = await response.text();
-          throw new Error(message || "Failed to create candidate");
-        }
-
-        const created = await response.json().catch(() => undefined);
         formApi.reset();
         onSuccess?.(created);
       } catch (err) {

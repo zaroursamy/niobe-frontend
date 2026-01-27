@@ -26,13 +26,53 @@ export const candidatesSearchSchema = z.object({
 
 export type CandidatesSearch = z.infer<typeof candidatesSearchSchema>;
 
+export type CandidateCvLlmProfile = {
+  fullName?: string;
+  summary?: string;
+  email?: string;
+  title?: string;
+  phone?: string;
+};
+
+export type CandidateCvLlmPayload = {
+  profile?: CandidateCvLlmProfile;
+};
+
 export type CandidateCvParsedResponse = {
   filename: string;
   lang?: string | null;
   text?: string | null;
-  llm?: unknown;
+  llm?: CandidateCvLlmPayload | null;
   ocr_used: boolean;
 };
+
+export type CreateCandidatePayload = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  title: string;
+  experience?: number;
+  notes: string;
+  source: string;
+};
+
+export async function createCandidate(
+  payload: CreateCandidatePayload,
+): Promise<unknown> {
+  const response = await fetchWithRefresh(`${BACKEND_URL}/candidates`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const message = await response.text();
+    throw new Error(message || "Failed to create candidate");
+  }
+
+  return response.json().catch(() => undefined);
+}
 
 export async function getCandidate(id: string): Promise<Candidate> {
   const response = await fetchWithRefresh(`${BACKEND_URL}/candidates/${id}`);

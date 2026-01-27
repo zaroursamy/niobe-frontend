@@ -15,18 +15,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 import { useAuth } from "@/hooks/use-auth";
-import { BACKEND_URL } from "@/lib/config";
+import { signIn } from "@/data/auth";
 
 const formSchema = z.object({
   email: z.email("Enter a valid email."),
   password: z.string().min(8, "Password must be at least 8 characters."),
 });
-
-type LoginResponse = {
-  access_token?: string;
-  token_type?: string;
-  message?: string;
-};
 
 type FormStatus = {
   error?: string;
@@ -50,26 +44,8 @@ export default function SignInForm() {
       setStatus({});
 
       try {
-        const response = await fetch(`${BACKEND_URL}/auth/login`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(value),
-        });
-
-        const data = (await response.json()) as LoginResponse;
-
-        if (!response.ok) {
-          throw new Error(data?.message ?? "Unable to sign in");
-        }
-
-        setStatus({
-          success: data?.access_token
-            ? `Signed in. Token type: ${data.token_type ?? "bearer"}`
-            : "Signed in successfully",
-        });
+        await signIn(value);
+        setStatus({ success: "Signed in successfully" });
         formApi.reset();
         await refreshUser();
         await navigate({ to: "/dashboard" });

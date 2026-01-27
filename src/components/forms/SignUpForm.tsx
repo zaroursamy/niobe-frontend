@@ -13,22 +13,13 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-  InputGroupText,
-} from "@/components/ui/input-group";
-import { BACKEND_URL } from "@/lib/config";
+import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
+import { signUp } from "@/data/auth";
 
 const formSchema = z.object({
   email: z.string().trim().email("Enter a valid email."),
   password: z.string().min(8, "Password must be at least 8 characters."),
 });
-
-type RegisterResponse = {
-  message?: string;
-};
 
 type FormStatus = {
   error?: string;
@@ -50,21 +41,7 @@ export default function SignUpForm() {
       setStatus({});
 
       try {
-        const response = await fetch(`${BACKEND_URL}/auth/register`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(value),
-        });
-
-        const data = (await response.json()) as RegisterResponse;
-
-        if (!response.ok) {
-          throw new Error(data?.message ?? "Unable to create account");
-        }
-
+        const data = await signUp(value);
         setStatus({ success: data?.message ?? "Account created" });
         formApi.reset();
       } catch (error) {

@@ -10,6 +10,7 @@ import {
   uploadCandidateCv,
   attachCvParsed,
   type CandidateCvParsedResponse,
+  type CandidateCvLlmProfile,
 } from "@/data/candidates";
 import { extractCandidateCvInfo } from "@/data/ai";
 
@@ -19,25 +20,11 @@ type ImportCandidateFromCvFormProps = {
   onBack?: () => void;
 };
 
-type LlmProfile = {
-  fullName?: string;
-  summary?: string;
-  email?: string;
-  title?: string;
-  phone?: string;
-};
-
-type LlmPayload = {
-  profile?: LlmProfile;
-};
-
 const getProfile = (
   llm: CandidateCvParsedResponse["llm"],
-): LlmProfile | null => {
-  if (!llm || typeof llm !== "object") return null;
-  if (!("profile" in llm)) return null;
-  const profile = (llm as LlmPayload).profile;
-  return profile ?? null;
+): CandidateCvLlmProfile | null => {
+  if (!llm) return null;
+  return llm.profile ?? null;
 };
 
 const splitFullName = (fullName: string) => {
